@@ -1665,16 +1665,6 @@
       const tagsEl = document.getElementById('product-tags');
       if (tagsEl) tagsEl.textContent = mol.tags;
 
-      // Ensure modal and card scroll positions are reset to the very top
-      const cardEl = document.getElementById('career-card');
-      if (cardEl) {
-        cardEl.scrollTop = 0;
-      }
-      const modalEl = document.getElementById('career-modal');
-      if (modalEl) {
-        modalEl.scrollTop = 0;
-      }
-
       // 1. Molecular Structure Graphic Rendering
       const molGfx = document.getElementById('molecule-graphic-container');
       if (molGfx) {
@@ -1696,7 +1686,6 @@
       const prodGfx = document.getElementById('product-graphic-container');
       if (prodGfx) {
         if (customInfographicUrl && mol.cropProduct) {
-          // If infographic is uploaded/connected, show exact cropped region of original image
           prodGfx.innerHTML = `
             <div class="w-full h-full rounded-xl overflow-hidden relative shadow-md bg-white border border-emerald-300"
                  style="background-image: url('${customInfographicUrl}');
@@ -1706,7 +1695,6 @@
             </div>
           `;
         } else if (mol.renderProduct) {
-          // Render high-fidelity vector illustration
           prodGfx.innerHTML = `
             <div class="relative w-full h-full flex items-center justify-center">
               ${mol.renderProduct()}
@@ -1715,12 +1703,47 @@
         }
       }
 
-      document.getElementById('career-modal').classList.remove('hidden');
+      // [CRITICAL] 1. Unhide modal FIRST so browser calculates geometry
+      const modalEl = document.getElementById('career-modal');
+      const cardEl = document.getElementById('career-card');
+      const headerEl = document.getElementById('career-header');
+
+      modalEl.classList.remove('hidden');
       lucide.createIcons();
+
+      // [CRITICAL] 2. Immediate & Multi-pass Instant Scroll Reset to Absolute Top
+      const forceScrollToTop = () => {
+        if (cardEl) {
+          cardEl.scrollTop = 0;
+          cardEl.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }
+        if (modalEl) {
+          modalEl.scrollTop = 0;
+          modalEl.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }
+        if (headerEl) {
+          headerEl.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'instant' });
+        }
+      };
+
+      // Immediate call
+      forceScrollToTop();
+
+      // Next Animation Frame (after browser paint pass)
+      requestAnimationFrame(forceScrollToTop);
+
+      // Double-check timeout (ensures any icon reflow or font render doesn't push scroll down)
+      setTimeout(forceScrollToTop, 30);
+      setTimeout(forceScrollToTop, 80);
     }
 
     function advanceToNextStage() {
-      document.getElementById('career-modal').classList.add('hidden');
+      const cardEl = document.getElementById('career-card');
+      const modalEl = document.getElementById('career-modal');
+      if (cardEl) cardEl.scrollTop = 0;
+      if (modalEl) modalEl.scrollTop = 0;
+
+      modalEl.classList.add('hidden');
       currentStageIndex++;
 
       if (currentStageIndex >= MOLECULES.length) {

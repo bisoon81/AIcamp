@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Catch & Craft - 기후테크(CCUS) 탄소 분자 결합 챌린지</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Pretendard & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans KR"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              dark: '#0f172a',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Canvas & UI Polish */
+    canvas {
+      touch-action: none;
+      user-select: none;
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    .glass-dark {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+    .atom-btn {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .atom-btn:active {
+      transform: scale(0.92);
+    }
+    /* Hide scrollbars for clean presentation */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-800 antialiased h-[100dvh] max-h-[100dvh] flex flex-col font-sans select-none overflow-hidden">
+
+  <!-- Top Global Header (Compact for Tablet Fit) -->
+  <header class="w-full bg-slate-950/90 border-b border-slate-800 backdrop-blur-md shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 z-40">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
+      <!-- Title & Mission Badge -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 shrink-0">
+          <i data-lucide="leaf" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-sm sm:text-base font-bold text-white tracking-tight">Carbon Catch & Craft</h1>
+            <span class="text-[10px] sm:text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.2 rounded-full font-medium hidden md:inline-block">
+              CCUS 기후테크 진로캠프
+            </span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-slate-400 leading-tight">포집된 이산화탄소($CO_2$) 자원화 프로젝트</p>
+        </div>
+      </div>
+
+      <!-- Stats Bar: Score, Stage, Sound Control -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Stage Progress Indicator -->
+        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg sm:rounded-xl">
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span class="text-[11px] sm:text-xs text-slate-400 font-medium">스테이지:</span>
+          <span id="stage-display" class="text-xs sm:text-sm font-bold text-emerald-300">1 / 6</span>
+        </div>
+
+        <!-- Eco Energy Points -->
+        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg sm:rounded-xl">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="text-[11px] sm:text-xs text-slate-400 font-medium hidden xs:inline">감축 포인트:</span>
+          <span id="score-display" class="text-xs sm:text-sm font-bold text-amber-300">0 P</span>
+        </div>
+
+        <!-- Sound Toggle Button -->
+        <button id="sound-btn" class="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition" title="효과음 켜기/끄기">
+          <i data-lucide="volume-2" id="sound-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Game Container (Auto fitting viewport height) -->
+  <main class="flex-1 min-h-0 max-w-6xl w-full mx-auto p-2 sm:p-3 flex flex-col gap-2 overflow-hidden">
+    
+    <!-- Top Stage Briefing Banner (Compact responsive height) -->
+    <div class="glass-dark rounded-xl sm:rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 sm:gap-3 text-white border border-slate-800 shadow-md shrink-0">
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <span id="target-index-badge" class="px-2 py-0.5 sm:py-1 rounded-md text-[10px] sm:text-xs font-bold bg-emerald-600 text-white shrink-0">
+          STAGE 1
+        </span>
+        <div class="truncate">
+          <div class="flex items-center gap-1.5">
+            <h2 class="text-sm sm:text-base font-extrabold text-slate-100 flex items-center gap-1.5 truncate">
+              미션: <span id="target-formula-display" class="text-emerald-400 font-black text-base sm:text-lg">C₂H₄</span>
+            </h2>
+            <span class="text-[11px] text-slate-400 hidden lg:inline">(원자를 드래그하여 슬롯에 끼워 맞추세요!)</span>
+          </div>
+          <p id="target-hint" class="text-[11px] sm:text-xs text-slate-300 truncate mt-0.5">
+            플라스틱 제품, 친환경 합성섬유 및 포장재를 대체하는 핵심 탄소 기초 화합물
+          </p>
+        </div>
+      </div>
+      
+      <!-- Atom Requirement Counters -->
+      <div class="flex items-center gap-1 sm:gap-2 bg-slate-950/80 px-2 sm:px-3 py-1 rounded-xl border border-slate-800 shrink-0">
+        <!-- Carbon Count -->
+        <div class="flex items-center gap-1 px-1 sm:px-1.5">
+          <span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-slate-800 border border-slate-500 inline-block shadow-sm"></span>
+          <span class="text-[11px] sm:text-xs font-bold text-slate-300">C:</span>
+          <span id="c-count-badge" class="text-[11px] sm:text-xs font-bold text-emerald-400">0 / 2</span>
+        </div>
+        <!-- Hydrogen Count -->
+        <div class="flex items-center gap-1 px-1 sm:px-1.5 border-l border-slate-800">
+          <span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-slate-100 border border-slate-300 inline-block shadow-sm"></span>
+          <span class="text-[11px] sm:text-xs font-bold text-slate-300">H:</span>
+          <span id="h-count-badge" class="text-[11px] sm:text-xs font-bold text-emerald-400">0 / 4</span>
+        </div>
+        <!-- Oxygen Count -->
+        <div class="flex items-center gap-1 px-1 sm:px-1.5 border-l border-slate-800">
+          <span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-red-500 border border-red-300 inline-block shadow-sm"></span>
+          <span class="text-[11px] sm:text-xs font-bold text-slate-300">O:</span>
+          <span id="o-count-badge" class="text-[11px] sm:text-xs font-bold text-emerald-400">0 / 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Catch & Craft Area (Pure Fullscreen Drag Area without Inject Bar) -->
+    <div class="relative w-full flex-1 min-h-0 rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl flex flex-col">
+      
+      <!-- Live Atom Falling Canvas -->
+      <canvas id="game-canvas" class="w-full h-full cursor-grab active:cursor-grabbing block"></canvas>
+
+      <!-- Floating Guide HUD Overlay (Top-Left) -->
+      <div class="absolute top-2.5 left-2.5 pointer-events-none bg-slate-900/90 backdrop-blur-sm border border-slate-800 text-slate-300 text-[11px] sm:text-xs px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-lg">
+        <i data-lucide="hand" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+        <span>떨어지는 원자를 손가락이나 마우스로 드래그해 슬롯에 끼우세요!</span>
+      </div>
+
+      <!-- Floating Reset Button (Top-Right) -->
+      <button id="btn-reset-molecule" class="absolute top-2.5 right-2.5 z-10 px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-[11px] sm:text-xs flex items-center gap-1 shadow-lg transition active:scale-95" title="슬롯 초기화">
+        <i data-lucide="rotate-ccw" class="w-3 h-3 text-slate-400"></i>
+        <span>슬롯 초기화</span>
+      </button>
+
+      <!-- 분자 결합 완료 시 구조를 충분히 관찰할 수 있는 안내 및 퀴즈 진행 오버레이 -->
+      <div id="structure-complete-banner" class="absolute inset-0 bg-slate-950/75 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center z-20 hidden transition-all duration-300">
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-md w-full border-2 border-emerald-400 shadow-2xl animate-fade-in">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-600 border border-emerald-400/40 mx-auto flex items-center justify-center mb-3 shadow-lg animate-bounce">
+            <i data-lucide="sparkles" class="w-8 h-8"></i>
+          </div>
+          <span class="text-xs font-black tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full uppercase">
+            분자 결합 성공!
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-2 mb-1">
+            화학 구조가 완성되었습니다!
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+            모든 결합 슬롯이 완벽히 채워졌습니다.<br>
+            화면 뒤에 완성된 <b>원자 결합 형태와 화학식</b>을 자세히 관찰해 보세요!
+          </p>
+          <div class="flex flex-col gap-2">
+            <button id="btn-start-quiz" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 transition active:scale-95">
+              <span>🔍 구조 확인 완료! 분자 맞추기 퀴즈 풀기</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+            <button id="btn-peek-structure" class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs transition">
+              구조 다시 자세히 보기 (배너 잠깐 숨기기)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL 1: Molecule Identification Quiz Modal -->
+  <div id="quiz-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden transition-opacity">
+    <div class="glass-panel w-full max-w-lg rounded-3xl p-6 shadow-2xl border border-emerald-500/40 transform transition-all scale-95 duration-200" id="quiz-card">
+      <div class="text-center">
+        <!-- Success Icon Pulse -->
+        <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center shadow-lg mb-3 animate-bounce">
+          <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+        </div>
+        <span class="text-xs font-bold tracking-wider text-emerald-600 uppercase bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          분자 결합 성공!
+        </span>
+        <h3 class="text-2xl font-extrabold text-slate-900 mt-2 mb-1">이 분자의 이름은 무엇일까요?</h3>
+        <p class="text-sm text-slate-600">완성된 화학식 <span id="quiz-formula" class="font-bold text-emerald-600">C₂H₄</span> 구조를 보고 물질명을 맞춰보세요!</p>
+      </div>
+
+      <!-- Quiz Options Grid -->
+      <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6">
+        <!-- Populated via JavaScript -->
+      </div>
+
+      <!-- 정답 확인 및 기후테크 진로 카드 이동 영역 (바로 넘어가지 않고 충분히 확인할 수 있도록 개선) -->
+      <div id="quiz-feedback-box" class="space-y-3 min-h-[40px] text-center">
+        <div id="quiz-feedback" class="text-sm font-bold min-h-[22px]"></div>
+        <button id="btn-open-career-card" class="hidden w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-sm shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2 transition active:scale-95 animate-pulse">
+          <i data-lucide="award" class="w-4 h-4"></i>
+          <span id="btn-career-text">정답 확인 완료! 🌿 기후테크 진로 카드 열기</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Climate-Tech Career Discovery Card Modal -->
+  <div id="career-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden transition-opacity">
+    <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl border border-emerald-500/50 max-h-[90vh] overflow-y-auto transform transition-all scale-95 duration-200" id="career-card">
+      
+      <!-- Card Header -->
+      <div class="flex items-start justify-between border-b border-slate-200 pb-4 mb-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500 text-white" id="career-badge">
+              CCUS 활용 산물
+            </span>
+            <span class="text-xs text-slate-500" id="career-formula">화학식: C₂H₄</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black text-slate-900" id="career-title">에틸렌 (Ethylene)</h3>
+        </div>
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg">
+          <i data-lucide="sparkles" class="w-7 h-7"></i>
+        </div>
+      </div>
+
+      <!-- Card Body: Applications & Climate Tech Impact -->
+      <div class="space-y-4 text-slate-700">
+        <!-- Application Field -->
+        <div class="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-100">
+          <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+            <i data-lucide="package" class="w-4 h-4 text-emerald-600"></i>
+            실생활 및 친환경 산업 활용 분야
+          </h4>
+          <p id="career-application" class="text-sm font-medium text-slate-800 leading-relaxed">
+            플라스틱 제품, 합성섬유, 친환경 포장재 제조의 핵심 원료. 석유 화학 기반을 대체하여 온실가스 배출을 획기적으로 줄입니다.
+          </p>
+        </div>
+
+        <!-- Climate Impact (CCUS Value) -->
+        <div class="bg-teal-50/60 p-4 rounded-2xl border border-teal-100">
+          <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+            <i data-lucide="globe" class="w-4 h-4 text-teal-600"></i>
+            기후테크(CCUS) 온실가스 감축 가치
+          </h4>
+          <p id="career-climate" class="text-sm font-medium text-slate-800 leading-relaxed">
+            공기나 배기가스에서 포집한 CO₂ 1톤당 약 0.7~1.2톤의 탄소를 화학적으로 고정하여 영구히 제품화합니다.
+          </p>
+        </div>
+
+        <!-- High School / College Pathway & Future Job -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="bg-slate-100/80 p-3.5 rounded-2xl border border-slate-200">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
+              <i data-lucide="graduation-cap" class="w-4 h-4 text-emerald-600"></i>
+              추천 학과 & 전공
+            </span>
+            <p id="career-majors" class="text-sm font-bold text-slate-900">
+              고분자공학과, 화학공학과, 환경공학
+            </p>
+          </div>
+          <div class="bg-slate-100/80 p-3.5 rounded-2xl border border-slate-200">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
+              <i data-lucide="briefcase" class="w-4 h-4 text-emerald-600"></i>
+              미래 유망 직업 (Career)
+            </span>
+            <p id="career-jobs" class="text-sm font-bold text-slate-900">
+              친환경 패키징 연구원, CCUS 플랜트 설계사
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="mt-6 pt-4 border-t border-slate-200 flex justify-end">
+        <button id="btn-next-stage" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition">
+          <span>다음 분자 합성하러 가기</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Camp Completion Certificate Modal -->
+  <div id="cert-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md hidden transition-opacity">
+    <div class="glass-panel w-full max-w-xl rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-emerald-400 text-center relative overflow-hidden">
+      <!-- Certificate Ribbon Graphic -->
+      <div class="w-20 h-20 bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 rounded-full mx-auto flex items-center justify-center shadow-xl mb-4">
+        <i data-lucide="award" class="w-10 h-10"></i>
+      </div>
+
+      <span class="text-xs font-extrabold tracking-widest text-emerald-700 uppercase bg-emerald-100 px-3 py-1 rounded-full">
+        진로캠프 활동 수료 인증서
+      </span>
+
+      <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-3 mb-1">
+        기후테크 마스터 연구원
+      </h3>
+      <p class="text-sm text-slate-600 mb-6">
+        귀하는 포집된 탄소(CO₂)를 활용하여 에틸렌, 에탄올, 메탄올, 부탄올, 개미산, 그래핀 등 6대 핵심 기후테크 분자를 성공적으로 합성하였으므로 본 수료증을 수여합니다.
+      </p>
+
+      <!-- Summary Stats Card -->
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center justify-around mb-6">
+        <div>
+          <span class="text-xs text-slate-500 block">합성한 분자</span>
+          <span class="text-lg font-black text-emerald-600">6 종 전원 완료</span>
+        </div>
+        <div class="h-8 w-px bg-slate-200"></div>
+        <div>
+          <span class="text-xs text-slate-500 block">최종 탄소 감축 점수</span>
+          <span id="final-score" class="text-lg font-black text-amber-500">1200 P</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center gap-3">
+        <button id="btn-restart-game" class="w-full py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition flex items-center justify-center gap-2">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+          처음부터 다시 도전하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Safe Sound Synthesizer via Web Audio API (No External Sound URLs) */
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playPop() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, this.ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.09);
+      }
+      playSuccess() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.18, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.26);
+        });
+      }
+      playWrong() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.linearRampToValueAtTime(110, now + 0.18);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.18);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.19);
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 1.5;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.radius = Math.random() * 3.5 + 2;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.03 + 0.02;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.08; // mild gravity
+        this.alpha -= this.decay;
+      }
+      draw(context) {
+        context.save();
+        context.globalAlpha = Math.max(0, this.alpha);
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        context.fillStyle = this.color;
+        context.shadowColor = this.color;
+        context.shadowBlur = 6;
+        context.fill();
+        context.restore();
+      }
+    }
+
+    class FallingAtom {
+      constructor() {
+        // Bias spawn towards elements needed in the current stage
+        const mol = (typeof MOLECULES !== 'undefined' && MOLECULES[currentStageIndex]) ? MOLECULES[currentStageIndex] : null;
+        let pool = ['C', 'H'];
+        if (mol) {
+          pool = [];
+          if (mol.req.C > 0) pool.push('C', 'C');
+          if (mol.req.H > 0) pool.push('H', 'H');
+          if (mol.req.O > 0) pool.push('O', 'O');
+          // Add extra diversity
+          pool.push('C', 'H', 'O');
+        }
+        
+        this.type = pool[Math.floor(Math.random() * pool.length)];
+        this.radius = 21;
+        this.x = Math.random() * (width - 60) + 30;
+        this.y = -30;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = Math.random() * 1.1 + 1.2; // Fall speed
+        this.isDragging = false;
+        this.wobble = Math.random() * Math.PI * 2;
+      }
+
+      update() {
+        if (this.isDragging) return;
+        this.wobble += 0.04;
+        this.x += this.vx + Math.sin(this.wobble) * 0.4;
+        this.y += this.vy;
+
+        // Bounce off left/right bounds
+        if (this.x - this.radius < 10) {
+          this.x = 10 + this.radius;
+          this.vx *= -1;
+        } else if (this.x + this.radius > width - 10) {
+          this.x = width - 10 - this.radius;
+          this.vx *= -1;
+        }
+      }
+
+      draw(context) {
+        context.save();
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+
+        // Styling based on element type
+        let fillGrad;
+        if (this.type === 'C') {
+          fillGrad = context.createRadialGradient(this.x - 5, this.y - 5, 2, this.x, this.y, this.radius);
+          fillGrad.addColorStop(0, '#475569');
+          fillGrad.addColorStop(1, '#0f172a');
+          context.fillStyle = fillGrad;
+          context.strokeStyle = this.isDragging ? '#34d399' : '#64748b';
+        } else if (this.type === 'H') {
+          fillGrad = context.createRadialGradient(this.x - 5, this.y - 5, 2, this.x, this.y, this.radius);
+          fillGrad.addColorStop(0, '#ffffff');
+          fillGrad.addColorStop(1, '#cbd5e1');
+          context.fillStyle = fillGrad;
+          context.strokeStyle = this.isDragging ? '#38bdf8' : '#94a3b8';
+        } else { // 'O'
+          fillGrad = context.createRadialGradient(this.x - 5, this.y - 5, 2, this.x, this.y, this.radius);
+          fillGrad.addColorStop(0, '#f87171');
+          fillGrad.addColorStop(1, '#b91c1c');
+          context.fillStyle = fillGrad;
+          context.strokeStyle = this.isDragging ? '#fca5a5' : '#ef4444';
+        }
+
+        context.lineWidth = this.isDragging ? 3.5 : 2;
+        if (this.isDragging) {
+          context.shadowColor = this.type === 'O' ? '#ef4444' : (this.type === 'C' ? '#10b981' : '#38bdf8');
+          context.shadowBlur = 14;
+        } else {
+          context.shadowColor = 'rgba(0, 0, 0, 0.4)';
+          context.shadowBlur = 6;
+        }
+
+        context.fill();
+        context.stroke();
+
+        // Atom Symbol Label
+        context.fillStyle = this.type === 'H' ? '#0f172a' : '#ffffff';
+        context.font = 'bold 15px "Inter", sans-serif';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.shadowBlur = 0;
+        context.fillText(this.type, this.x, this.y);
+
+        // Highlight sheen on top
+        context.beginPath();
+        context.arc(this.x - 6, this.y - 6, 4, 0, Math.PI * 2);
+        context.fillStyle = 'rgba(255, 255, 255, 0.45)';
+        context.fill();
+
+        context.restore();
+      }
+    }
+
+    /* 6 Core Molecules Dataset from Infographic */
+    const MOLECULES = [
+      {
+        id: 'ethylene',
+        name: '에틸렌',
+        formula: 'C₂H₄',
+        hint: '플라스틱 제품, 합성섬유, 친환경 포장재를 만드는 석유화학 대체 기본 원료',
+        req: { C: 2, H: 4, O: 0 },
+        quizOptions: ['에틸렌', '에탄올', '아세트산', '프로판'],
+        application: '생분해성 바이오 플라스틱, 섬유, 친환경 포장재 등 석유계 플라스틱 대체',
+        climate: '포집된 CO₂ 1톤을 에틸렌으로 전환 시 약 0.8톤 이상의 화석연료 유래 탄소를 감축',
+        majors: '고분자공학과, 화학공학과, 첨단소재공학',
+        jobs: '친환경 패키징 연구원, 고분자 합성 공정 엔지니어'
+      },
+      {
+        id: 'ethanol',
+        name: '에탄올',
+        formula: 'C₂H₅OH',
+        hint: '친환경 바이오 e-연료, 손소독제, 위생용품 및 화장품의 핵심 원료',
+        req: { C: 2, H: 6, O: 1 },
+        quizOptions: ['메탄올', '에탄올', '부탄올', '벤젠'],
+        application: 'e-바이오연료, 소독제, 제약 바이오, 청정 세정제 및 화장품 원료',
+        climate: '재생에너지 전력을 이용한 전기화학적 포집 CO₂ 전환으로 탄소중립 순환 사이클 구현',
+        majors: '생명화학공학과, 바이오시스템공학, 청정에너지학과',
+        jobs: '바이오에너지 연구원, 청정연료 공정 개발자'
+      },
+      {
+        id: 'methanol',
+        name: '메탄올',
+        formula: 'CH₃OH',
+        hint: '탄소중립 친환경 선박 연료(e-메탄올) 및 화학제품 기본 용매',
+        req: { C: 1, H: 4, O: 1 },
+        quizOptions: ['포름산', '포름알데히드', '메탄올', '글리세롤'],
+        application: '글로벌 해운 탄소중립 선박 연료, 친환경 용매, 화학 중간체 원료',
+        climate: '대형 선박의 중유 대체 연료로 활용되어 해운 수송 분야 탄소 배출 95% 저감',
+        majors: '에너지화학공학, 신재생에너지 플랜트공학, 환경시스템공학',
+        jobs: '선박 청정연료 시스템 엔지니어, 탄소자원화 연구원'
+      },
+      {
+        id: 'butanol',
+        name: '부탄올',
+        formula: 'C₄H₉OH',
+        hint: '차세대 지속가능 항공유(SAF) 및 고급 친환경 도료 원료',
+        req: { C: 4, H: 10, O: 1 },
+        quizOptions: ['부탄올', '아세톤', '에테르', '프로필렌'],
+        application: '지속가능 항공유(SAF), 자동차 친환경 도료, 정밀 화학제품 용매',
+        climate: '항공 운송 부문 탈탄소화의 열쇠로서 기존 항공유 대비 라이프사이클 탄소 70% 이상 감축',
+        majors: '항공우주공학, 정밀화학과, 환경에너지공학과',
+        jobs: '지속가능 항공유(SAF) 합성 연구원, 정밀화학 공정 기술자'
+      },
+      {
+        id: 'formic_acid',
+        name: '개미산',
+        formula: 'CH₂O₂',
+        hint: '친환경 보존제, 사료첨가제, 가죽·섬유 가공 및 차세대 연료전지 전해액',
+        req: { C: 1, H: 2, O: 2 },
+        quizOptions: ['구연산', '개미산', '옥살산', '아세트산'],
+        application: '무독성 사료 첨가 보존제, 섬유/가죽 가공제, 액체 수소 저장체 및 연료전지',
+        climate: 'CO₂ 전기환원 반응을 통해 가장 높은 에너지 효율로 직접 전환되는 고부가가치 유기산',
+        majors: '녹색화학과, 환경공학과, 신에너지시스템공학',
+        jobs: '연료전지 전해질 연구원, 친환경 소재 평가원'
+      },
+      {
+        id: 'graphene',
+        name: '그래핀',
+        formula: 'C (동소체)',
+        hint: '차세대 2차전지 배터리, 초경량 반도체 및 플렉서블 스마트기기 신소재',
+        req: { C: 6, H: 0, O: 0 }, // 6-ring hexagonal demonstration
+        quizOptions: ['흑연', '다이아몬드', '그래핀', '풀러렌'],
+        application: '초고속 충전 배터리 음극재, 방열 스마트폰 부품, 차세대 반도체 나노소재',
+        climate: '온실가스인 CO₂와 메탄을 고순도 고체 탄소(그래핀)로 영구 격리하여 대기 방출 완전 차단',
+        majors: '신소재공학과, 나노융합공학과, 반도체소재물리학과',
+        jobs: '나노신소재 연구원, 차세대 배터리 설계 연구원'
+      }
+    ];
+
+    /* Game State Management */
+    let currentStageIndex = 0;
+    let score = 0;
+    let currentSlots = []; // Stores the physical slots of the active molecule
+    let fallingAtoms = [];
+    let particles = [];
+    let isModalOpen = false;
+
+    // Drag and Drop interaction state
+    let draggedAtom = null;
+    let hoveredSlot = null;
+    let pointerPos = { x: 0, y: 0 };
+    let activePointerId = null;
+
+    // Canvas references
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      width = rect.width;
+      height = rect.height;
+      initMoleculeSlots(currentStageIndex);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function initMoleculeSlots(stageIdx) {
+      if (!width || !height) return;
+      const centerX = width / 2;
+      // Position slots comfortably in the lower center area of the canvas
+      const centerY = height * 0.60;
+      const molecule = MOLECULES[stageIdx];
+      const slots = [];
+
+      // Scale slot spacing adaptively if screen is narrow (mobile or tablet portrait)
+      const isCompact = width < 680;
+      const s = isCompact ? 0.78 : 1.0;
+
+      let idCounter = 0;
+      const addSlot = (type, x, y, label) => {
+        slots.push({
+          id: `${molecule.id}_slot_${idCounter++}`,
+          type: type,
+          x: x,
+          y: y,
+          label: label || type,
+          filled: false
+        });
+      };
+
+      if (molecule.id === 'ethylene') { // C2H4 (C=C with 4 H)
+        addSlot('C', centerX - 42 * s, centerY);
+        addSlot('C', centerX + 42 * s, centerY);
+        addSlot('H', centerX - 82 * s, centerY - 45 * s);
+        addSlot('H', centerX - 82 * s, centerY + 45 * s);
+        addSlot('H', centerX + 82 * s, centerY - 45 * s);
+        addSlot('H', centerX + 82 * s, centerY + 45 * s);
+      } else if (molecule.id === 'ethanol') { // C2H5OH
+        addSlot('C', centerX - 60 * s, centerY);
+        addSlot('C', centerX, centerY);
+        addSlot('O', centerX + 60 * s, centerY - 15 * s);
+        addSlot('H', centerX + 95 * s, centerY + 15 * s);
+        addSlot('H', centerX - 60 * s, centerY - 48 * s);
+        addSlot('H', centerX - 60 * s, centerY + 48 * s);
+        addSlot('H', centerX - 105 * s, centerY);
+        addSlot('H', centerX, centerY - 48 * s);
+        addSlot('H', centerX, centerY + 48 * s);
+      } else if (molecule.id === 'methanol') { // CH3OH
+        addSlot('C', centerX - 30 * s, centerY);
+        addSlot('O', centerX + 45 * s, centerY - 12 * s);
+        addSlot('H', centerX + 82 * s, centerY + 18 * s);
+        addSlot('H', centerX - 30 * s, centerY - 52 * s);
+        addSlot('H', centerX - 30 * s, centerY + 52 * s);
+        addSlot('H', centerX - 78 * s, centerY);
+      } else if (molecule.id === 'butanol') { // C4H9OH
+        const step = 48 * s;
+        const startX = centerX - (1.5 * step);
+        for (let i = 0; i < 4; i++) {
+          addSlot('C', startX + i * step, centerY);
+          addSlot('H', startX + i * step, centerY - 45 * s);
+          addSlot('H', startX + i * step, centerY + 45 * s);
+        }
+        addSlot('H', startX - 38 * s, centerY);
+        addSlot('O', startX + 3 * step + 46 * s, centerY - 15 * s);
+        addSlot('H', startX + 3 * step + 80 * s, centerY + 15 * s);
+      } else if (molecule.id === 'formic_acid') { // CH2O2 (Formic acid)
+        addSlot('C', centerX - 20 * s, centerY);
+        addSlot('O', centerX - 20 * s, centerY - 52 * s);
+        addSlot('O', centerX + 45 * s, centerY + 18 * s);
+        addSlot('H', centerX + 82 * s, centerY + 42 * s);
+        addSlot('H', centerX - 68 * s, centerY);
+      } else if (molecule.id === 'graphene') { // Graphene hexagonal ring
+        const r = 52 * s;
+        for (let i = 0; i < 6; i++) {
+          const angle = (Math.PI / 3) * i - Math.PI / 6;
+          addSlot('C', centerX + r * Math.cos(angle), centerY + r * Math.sin(angle));
+        }
+      }
+
+      currentSlots = slots;
+    }
+
+    function drawMoleculeBlueprint(context) {
+      if (!currentSlots || currentSlots.length === 0) return;
+
+      // Draw Bonds connecting adjacent slots
+      context.save();
+      for (let i = 0; i < currentSlots.length; i++) {
+        for (let j = i + 1; j < currentSlots.length; j++) {
+          const dx = currentSlots[i].x - currentSlots[j].x;
+          const dy = currentSlots[i].y - currentSlots[j].y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 85) {
+            context.beginPath();
+            context.moveTo(currentSlots[i].x, currentSlots[i].y);
+            context.lineTo(currentSlots[j].x, currentSlots[j].y);
+
+            // If both connected slots are filled, glow the chemical bond!
+            if (currentSlots[i].filled && currentSlots[j].filled) {
+              context.strokeStyle = '#10b981';
+              context.lineWidth = 4.5;
+              context.shadowColor = 'rgba(16, 185, 129, 0.5)';
+              context.shadowBlur = 6;
+            } else {
+              context.strokeStyle = 'rgba(71, 85, 105, 0.45)';
+              context.lineWidth = 3.5;
+              context.shadowBlur = 0;
+            }
+            context.stroke();
+          }
+        }
+      }
+      context.restore();
+
+      // If user is dragging an atom, draw magnetic guide lines to candidate matching slots
+      if (draggedAtom) {
+        context.save();
+        currentSlots.forEach(slot => {
+          if (!slot.filled && slot.type === draggedAtom.type) {
+            const dist = Math.hypot(slot.x - draggedAtom.x, slot.y - draggedAtom.y);
+            if (dist < 140) {
+              context.beginPath();
+              context.moveTo(draggedAtom.x, draggedAtom.y);
+              context.lineTo(slot.x, slot.y);
+              context.strokeStyle = dist < 50 ? 'rgba(52, 211, 153, 0.8)' : 'rgba(52, 211, 153, 0.25)';
+              context.lineWidth = dist < 50 ? 2.5 : 1.5;
+              context.setLineDash([4, 4]);
+              context.stroke();
+            }
+          }
+        });
+        context.restore();
+      }
+
+      // Draw Slots
+      currentSlots.forEach((slot) => {
+        const isHovered = hoveredSlot && hoveredSlot.id === slot.id;
+        const isMatchingCandidate = draggedAtom && !slot.filled && slot.type === draggedAtom.type;
+
+        context.save();
+        context.beginPath();
+
+        const slotRadius = isHovered ? 26 : (isMatchingCandidate ? 24 : 22);
+        context.arc(slot.x, slot.y, slotRadius, 0, Math.PI * 2);
+
+        if (slot.filled) {
+          // Render Filled Snapped Atom
+          if (slot.type === 'C') {
+            context.fillStyle = '#1e293b';
+            context.strokeStyle = '#34d399';
+          } else if (slot.type === 'H') {
+            context.fillStyle = '#f1f5f9';
+            context.strokeStyle = '#38bdf8';
+          } else {
+            context.fillStyle = '#ef4444';
+            context.strokeStyle = '#f87171';
+          }
+          context.lineWidth = 3;
+          context.shadowColor = 'rgba(16, 185, 129, 0.4)';
+          context.shadowBlur = 8;
+          context.fill();
+          context.stroke();
+
+          // Symbol
+          context.fillStyle = slot.type === 'H' ? '#0f172a' : '#ffffff';
+          context.font = 'bold 15px "Inter", sans-serif';
+          context.textAlign = 'center';
+          context.textBaseline = 'middle';
+          context.fillText(slot.label, slot.x, slot.y);
+        } else {
+          // Render Empty Wireframe Target Slot with Drag Affordance
+          if (isHovered) {
+            context.fillStyle = 'rgba(16, 185, 129, 0.25)';
+            context.strokeStyle = '#10b981';
+            context.lineWidth = 3;
+            context.shadowColor = '#10b981';
+            context.shadowBlur = 12;
+          } else if (isMatchingCandidate) {
+            context.fillStyle = 'rgba(16, 185, 129, 0.1)';
+            context.strokeStyle = '#34d399';
+            context.lineWidth = 2.5;
+            context.shadowColor = '#34d399';
+            context.shadowBlur = 6;
+          } else {
+            context.fillStyle = 'rgba(15, 23, 42, 0.65)';
+            context.strokeStyle = slot.type === 'C' ? '#94a3b8' : (slot.type === 'O' ? '#f87171' : '#cbd5e1');
+            context.lineWidth = 2;
+            context.shadowBlur = 0;
+          }
+
+          context.setLineDash(isHovered ? [] : [5, 4]);
+          context.fill();
+          context.stroke();
+          context.setLineDash([]);
+
+          // Ghost Text
+          context.fillStyle = isHovered ? '#10b981' : (isMatchingCandidate ? '#6ee7b7' : 'rgba(203, 213, 225, 0.75)');
+          context.font = isHovered ? 'bold 16px "Inter", sans-serif' : '13px "Inter", sans-serif';
+          context.textAlign = 'center';
+          context.textBaseline = 'middle';
+          context.fillText(slot.label, slot.x, slot.y);
+        }
+        context.restore();
+      });
+    }
+
+    let lastSpawnTime = 0;
+    function gameLoop(timestamp) {
+      if (!isModalOpen) {
+        ctx.clearRect(0, 0, width, height);
+
+        // Spawn falling atoms periodically
+        if (timestamp - lastSpawnTime > 900 && fallingAtoms.length < 8) {
+          fallingAtoms.push(new FallingAtom());
+          lastSpawnTime = timestamp;
+        }
+
+        // Update & draw particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.update();
+          p.draw(ctx);
+          if (p.alpha <= 0) particles.splice(i, 1);
+        }
+
+        // Draw the target molecule blueprint at bottom
+        drawMoleculeBlueprint(ctx);
+
+        // Update & draw falling atoms (draw dragged one on top)
+        for (let i = fallingAtoms.length - 1; i >= 0; i--) {
+          const atom = fallingAtoms[i];
+          if (atom !== draggedAtom) {
+            atom.update();
+            atom.draw(ctx);
+
+            // Remove if falls off-screen
+            if (atom.y > height + 40) {
+              fallingAtoms.splice(i, 1);
+            }
+          }
+        }
+
+        // Draw active dragged atom last so it stays on top of everything
+        if (draggedAtom) {
+          draggedAtom.draw(ctx);
+        }
+      }
+      requestAnimationFrame(gameLoop);
+    }
+
+    function getPointerPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    function findClosestSlot(x, y, radius = 55) {
+      let closest = null;
+      let minDist = radius;
+
+      for (const slot of currentSlots) {
+        if (!slot.filled) {
+          const dist = Math.hypot(slot.x - x, slot.y - y);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = slot;
+          }
+        }
+      }
+      return closest;
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if (isModalOpen) return;
+      const pos = getPointerPos(e);
+      pointerPos = pos;
+
+      // Check if user clicked/touched an existing falling atom
+      for (let i = fallingAtoms.length - 1; i >= 0; i--) {
+        const atom = fallingAtoms[i];
+        const dist = Math.hypot(atom.x - pos.x, atom.y - pos.y);
+
+        if (dist <= atom.radius + 14) {
+          draggedAtom = atom;
+          draggedAtom.isDragging = true;
+          activePointerId = e.pointerId;
+          canvas.setPointerCapture(e.pointerId);
+          sound.playPop();
+          break;
+        }
+      }
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (!draggedAtom || e.pointerId !== activePointerId) return;
+      const pos = getPointerPos(e);
+      pointerPos = pos;
+
+      draggedAtom.x = pos.x;
+      draggedAtom.y = pos.y;
+
+      // Detect slot hover under dragged atom
+      const candidateSlot = findClosestSlot(pos.x, pos.y, 50);
+      if (candidateSlot && candidateSlot.type === draggedAtom.type) {
+        hoveredSlot = candidateSlot;
+      } else {
+        hoveredSlot = null;
+      }
+    });
+
+    function handlePointerRelease(e) {
+      if (!draggedAtom || (activePointerId !== null && e.pointerId !== activePointerId)) return;
+
+      const pos = getPointerPos(e);
+      const targetSlot = findClosestSlot(pos.x, pos.y, 52);
+
+      if (targetSlot) {
+        if (targetSlot.type === draggedAtom.type) {
+          // Success: Perfect slot match & snap!
+          targetSlot.filled = true;
+          score += 30;
+          sound.playPop();
+
+          const color = targetSlot.type === 'O' ? '#ef4444' : (targetSlot.type === 'C' ? '#10b981' : '#38bdf8');
+          createBurst(targetSlot.x, targetSlot.y, color);
+
+          // Remove dragged atom from falling pool
+          const idx = fallingAtoms.indexOf(draggedAtom);
+          if (idx > -1) fallingAtoms.splice(idx, 1);
+
+          updateHUD();
+          checkMoleculeCompletion();
+        } else {
+          // Wrong slot type mismatch!
+          sound.playWrong();
+          createBurst(draggedAtom.x, draggedAtom.y, '#f59e0b');
+
+          // Bounce away
+          draggedAtom.isDragging = false;
+          draggedAtom.vy = 2.2;
+          draggedAtom.vx = (Math.random() - 0.5) * 5;
+        }
+      } else {
+        // Dropped in empty air: resumes falling naturally
+        draggedAtom.isDragging = false;
+        draggedAtom.vy = Math.max(1.5, draggedAtom.vy);
+        draggedAtom.vx = (Math.random() - 0.5) * 2;
+      }
+
+      draggedAtom = null;
+      hoveredSlot = null;
+      activePointerId = null;
+      try {
+        canvas.releasePointerCapture(e.pointerId);
+      } catch (err) {}
+    }
+
+    canvas.addEventListener('pointerup', handlePointerRelease);
+    canvas.addEventListener('pointercancel', handlePointerRelease);
+
+    function createBurst(x, y, color) {
+      for (let k = 0; k < 14; k++) {
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    function checkMoleculeCompletion() {
+      const allFilled = currentSlots.length > 0 && currentSlots.every(s => s.filled);
+
+      if (allFilled) {
+        // Molecule Complete! 폭죽 효과 및 완성 배너 표시
+        sound.playSuccess();
+        isModalOpen = true;
+
+        // 화려한 축하 파티클 버스트 생성
+        const centerX = width / 2;
+        const centerY = height * 0.60;
+        for (let i = 0; i < 40; i++) {
+          createBurst(centerX + (Math.random() - 0.5) * 140, centerY + (Math.random() - 0.5) * 90, ['#10b981', '#38bdf8', '#fbbf24', '#f43f5e'][Math.floor(Math.random() * 4)]);
+        }
+
+        // 구조 완성 축하 오버레이 표시
+        const banner = document.getElementById('structure-complete-banner');
+        banner.classList.remove('hidden');
+        lucide.createIcons();
+      }
+    }
+
+    // 구조 다시보기 버튼 토글 기능
+    document.getElementById('btn-peek-structure').onclick = () => {
+      const banner = document.getElementById('structure-complete-banner');
+      banner.classList.add('opacity-10', 'pointer-events-none');
+      setTimeout(() => {
+        banner.classList.remove('opacity-10', 'pointer-events-none');
+      }, 3500); // 3.5초간 구조를 훤히 보게 한 뒤 다시 배너 활성화
+    };
+
+    // '퀴즈 풀기' 버튼 클릭 시 퀴즈 모달 열기
+    document.getElementById('btn-start-quiz').onclick = () => {
+      document.getElementById('structure-complete-banner').classList.add('hidden');
+      openQuizModal();
+    };
+
+    function openQuizModal() {
+      const mol = MOLECULES[currentStageIndex];
+      document.getElementById('quiz-formula').textContent = mol.formula;
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+      
+      const feedback = document.getElementById('quiz-feedback');
+      feedback.textContent = '원소 결합 구성과 화학식을 보고 올바른 분자명을 골라보세요!';
+      feedback.className = 'text-xs text-slate-500 font-medium py-1';
+      
+      const careerBtn = document.getElementById('btn-open-career-card');
+      careerBtn.classList.add('hidden');
+
+      // Shuffle options
+      const options = [...mol.quizOptions].sort(() => Math.random() - 0.5);
+
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "quiz-opt-btn w-full py-3.5 px-4 rounded-2xl bg-slate-100 hover:bg-emerald-500 hover:text-white border border-slate-300 hover:border-emerald-600 font-bold text-slate-800 text-sm transition text-center shadow-sm active:scale-95";
+        btn.textContent = opt;
+        btn.onclick = () => handleQuizAnswer(opt, mol.name, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById('quiz-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function handleQuizAnswer(selected, correct, clickedBtn) {
+      const feedback = document.getElementById('quiz-feedback');
+      const careerBtn = document.getElementById('btn-open-career-card');
+
+      if (selected === correct) {
+        document.querySelectorAll('.quiz-opt-btn').forEach(b => {
+          b.disabled = true;
+          if (b.textContent === correct) {
+            b.className = "w-full py-3.5 px-4 rounded-2xl bg-emerald-500 text-white border-2 border-emerald-600 font-black text-sm shadow-md ring-4 ring-emerald-200";
+          } else {
+            b.className = "w-full py-3.5 px-4 rounded-2xl bg-slate-100 text-slate-400 border border-slate-200 font-medium text-sm";
+          }
+        });
+
+        feedback.className = "text-center text-sm font-bold py-1 text-emerald-600 bg-emerald-50 rounded-xl p-2 border border-emerald-200";
+        feedback.innerHTML = `🎉 <b>정답입니다!</b> 완성된 분자는 <b>${correct}</b>(${MOLECULES[currentStageIndex].formula})입니다!`;
+        score += 100;
+        sound.playSuccess();
+        updateHUD();
+
+        careerBtn.classList.remove('hidden');
+        careerBtn.onclick = () => {
+          document.getElementById('quiz-modal').classList.add('hidden');
+          openCareerModal();
+        };
+        lucide.createIcons();
+
+      } else {
+        sound.playWrong();
+        feedback.className = "text-center text-xs font-bold py-1 text-red-500 bg-red-50 rounded-xl p-2 border border-red-200";
+        feedback.textContent = `아쉽네요! '${selected}'이(가) 아닙니다. 분자식과 결합된 원자 수를 다시 세어보세요!`;
+        if (clickedBtn) {
+          clickedBtn.classList.add('border-red-400', 'bg-red-50', 'text-red-600');
+        }
+      }
+    }
+
+    function openCareerModal() {
+      const mol = MOLECULES[currentStageIndex];
+      document.getElementById('career-title').textContent = `${mol.name} (${mol.id.toUpperCase()})`;
+      document.getElementById('career-formula').textContent = `화학식: ${mol.formula}`;
+      document.getElementById('career-application').textContent = mol.application;
+      document.getElementById('career-climate').textContent = mol.climate;
+      document.getElementById('career-majors').textContent = mol.majors;
+      document.getElementById('career-jobs').textContent = mol.jobs;
+
+      document.getElementById('career-modal').classList.remove('hidden');
+    }
+
+    function advanceToNextStage() {
+      document.getElementById('career-modal').classList.add('hidden');
+      currentStageIndex++;
+
+      if (currentStageIndex >= MOLECULES.length) {
+        document.getElementById('final-score').textContent = `${score} P`;
+        document.getElementById('cert-modal').classList.remove('hidden');
+      } else {
+        initMoleculeSlots(currentStageIndex);
+        isModalOpen = false;
+        updateHUD();
+      }
+    }
+
+    function resetMoleculeSlots() {
+      initMoleculeSlots(currentStageIndex);
+      updateHUD();
+    }
+
+    function updateHUD() {
+      const mol = MOLECULES[currentStageIndex] || MOLECULES[0];
+      document.getElementById('stage-display').textContent = `${currentStageIndex + 1} / ${MOLECULES.length}`;
+      document.getElementById('score-display').textContent = `${score} P`;
+      document.getElementById('target-index-badge').textContent = `STAGE ${currentStageIndex + 1}`;
+      document.getElementById('target-formula-display').textContent = mol.formula;
+      document.getElementById('target-hint').textContent = mol.hint;
+
+      // Count currently filled slots
+      const filledC = currentSlots.filter(s => s.filled && s.type === 'C').length;
+      const filledH = currentSlots.filter(s => s.filled && s.type === 'H').length;
+      const filledO = currentSlots.filter(s => s.filled && s.type === 'O').length;
+
+      document.getElementById('c-count-badge').textContent = `${filledC} / ${mol.req.C}`;
+      document.getElementById('h-count-badge').textContent = `${filledH} / ${mol.req.H}`;
+      document.getElementById('o-count-badge').textContent = `${filledO} / ${mol.req.O}`;
+    }
+
+    // Reset button listener
+    document.getElementById('btn-reset-molecule').onclick = () => {
+      resetMoleculeSlots();
+      sound.playPop();
+    };
+
+    document.getElementById('btn-next-stage').onclick = advanceToNextStage;
+
+    document.getElementById('btn-restart-game').onclick = () => {
+      document.getElementById('cert-modal').classList.add('hidden');
+      currentStageIndex = 0;
+      score = 0;
+      resetMoleculeSlots();
+      isModalOpen = false;
+      updateHUD();
+    };
+
+    // Sound toggle listener
+    document.getElementById('sound-btn').onclick = () => {
+      sound.enabled = !sound.enabled;
+      const icon = document.getElementById('sound-icon');
+      if (sound.enabled) {
+        icon.setAttribute('data-lucide', 'volume-2');
+        icon.className = "w-4 h-4 text-emerald-400";
+      } else {
+        icon.setAttribute('data-lucide', 'volume-x');
+        icon.className = "w-4 h-4 text-slate-500";
+      }
+      lucide.createIcons();
+    };
+
+    // Start on window load
+    window.onload = function() {
+      lucide.createIcons();
+      resizeCanvas();
+      updateHUD();
+      requestAnimationFrame(gameLoop);
+    };
+  </script>
+</body>
+</html>

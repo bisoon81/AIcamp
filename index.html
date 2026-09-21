@@ -1665,6 +1665,16 @@
       const tagsEl = document.getElementById('product-tags');
       if (tagsEl) tagsEl.textContent = mol.tags;
 
+      // Ensure modal and card scroll positions are reset to the very top
+      const cardEl = document.getElementById('career-card');
+      if (cardEl) {
+        cardEl.scrollTop = 0;
+      }
+      const modalEl = document.getElementById('career-modal');
+      if (modalEl) {
+        modalEl.scrollTop = 0;
+      }
+
       // 1. Molecular Structure Graphic Rendering
       const molGfx = document.getElementById('molecule-graphic-container');
       if (molGfx) {

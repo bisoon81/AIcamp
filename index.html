@@ -237,12 +237,12 @@
         <!-- Populated via JavaScript -->
       </div>
 
-      <!-- 정답 확인 및 기후테크 진로 카드 이동 영역 (바로 넘어가지 않고 충분히 확인할 수 있도록 개선) -->
+      <!-- 정답 확인 및 분자 상세 정보 카드 이동 영역 -->
       <div id="quiz-feedback-box" class="space-y-3 min-h-[40px] text-center">
         <div id="quiz-feedback" class="text-sm font-bold min-h-[22px]"></div>
         <button id="btn-open-career-card" class="hidden w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-sm shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2 transition active:scale-95 animate-pulse">
-          <i data-lucide="award" class="w-4 h-4"></i>
-          <span id="btn-career-text">정답 확인 완료! 🌿 기후테크 진로 카드 열기</span>
+          <i data-lucide="microscope" class="w-4 h-4"></i>
+          <span id="btn-career-text">정답 확인 완료! 🔬 분자 구조 & 실생활 활용 알아보기</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
       </div>
@@ -251,74 +251,81 @@
 
   <!-- MODAL 2: Climate-Tech Career Discovery Card Modal -->
   <div id="career-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden transition-opacity">
-    <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl border border-emerald-500/50 max-h-[90vh] overflow-y-auto transform transition-all scale-95 duration-200" id="career-card">
+    <div class="glass-panel w-full max-w-2xl rounded-3xl p-5 sm:p-7 shadow-2xl border border-emerald-500/50 max-h-[90vh] overflow-y-auto transform transition-all scale-95 duration-200" id="career-card">
       
       <!-- Card Header -->
-      <div class="flex items-start justify-between border-b border-slate-200 pb-4 mb-4">
+      <div class="flex items-start justify-between border-b border-slate-200 pb-3 mb-4">
         <div>
           <div class="flex items-center gap-2 mb-1">
             <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500 text-white" id="career-badge">
               CCUS 활용 산물
             </span>
-            <span class="text-xs text-slate-500" id="career-formula">화학식: C₂H₄</span>
+            <span class="text-xs text-slate-500 font-semibold" id="career-formula">화학식: C₂H₄</span>
           </div>
           <h3 class="text-2xl sm:text-3xl font-black text-slate-900" id="career-title">에틸렌 (Ethylene)</h3>
         </div>
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg">
-          <i data-lucide="sparkles" class="w-7 h-7"></i>
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shrink-0">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
       </div>
 
-      <!-- Card Body: Applications & Climate Tech Impact -->
+      <!-- Card Body: Structure Visualization + Application with Product Graphics + Climate Impact -->
       <div class="space-y-4 text-slate-700">
-        <!-- Application Field -->
-        <div class="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-100">
-          <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
-            <i data-lucide="package" class="w-4 h-4 text-emerald-600"></i>
-            실생활 및 친환경 산업 활용 분야
-          </h4>
-          <p id="career-application" class="text-sm font-medium text-slate-800 leading-relaxed">
-            플라스틱 제품, 합성섬유, 친환경 포장재 제조의 핵심 원료. 석유 화학 기반을 대체하여 온실가스 배출을 획기적으로 줄입니다.
-          </p>
+        <!-- 1. Molecular Structure Graphic Card -->
+        <div class="bg-slate-900 text-white p-4 rounded-2xl border border-slate-800 shadow-inner">
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="atom" class="w-4 h-4 text-emerald-400"></i>
+              완성된 분자 구조식 (Molecular Structure)
+            </h4>
+            <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">Ball-and-stick</span>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <div id="molecule-graphic-container" class="w-full sm:w-52 h-32 bg-slate-950/90 rounded-xl flex items-center justify-center p-2 border border-slate-800 shrink-0 shadow-inner overflow-hidden">
+              <!-- Rendered via JS -->
+            </div>
+            <p id="career-structure-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <!-- Description -->
+            </p>
+          </div>
         </div>
 
-        <!-- Climate Impact (CCUS Value) -->
-        <div class="bg-teal-50/60 p-4 rounded-2xl border border-teal-100">
-          <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+        <!-- 2. Application Field with Illustrations -->
+        <div class="bg-emerald-50/80 p-4 sm:p-5 rounded-2xl border-2 border-emerald-300/80 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h4 class="text-xs sm:text-sm font-black text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="package" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-700"></i>
+              실생활 및 친환경 산업 활용 분야
+            </h4>
+            <span id="product-tags" class="text-sm sm:text-base font-black text-emerald-950 bg-emerald-200 border-2 border-emerald-400 px-3.5 py-1 rounded-full shadow-sm tracking-wide">
+              플라스틱 제품 · 섬유 · 포장재
+            </span>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center gap-3.5">
+            <div id="product-graphic-container" class="w-full sm:w-52 h-32 bg-gradient-to-b from-white to-slate-100/90 rounded-xl flex items-center justify-center p-1.5 border border-emerald-200 shrink-0 shadow-sm overflow-hidden">
+              <!-- Rendered via JS -->
+            </div>
+            <p id="career-application" class="text-sm sm:text-base font-semibold text-slate-800 leading-relaxed flex-1">
+              <!-- Application text -->
+            </p>
+          </div>
+        </div>
+
+        <!-- 3. Climate Impact (CCUS Value) -->
+        <div class="bg-teal-50/80 p-4 rounded-2xl border border-teal-200/80">
+          <h4 class="text-xs sm:text-sm font-black text-teal-900 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
             <i data-lucide="globe" class="w-4 h-4 text-teal-600"></i>
             기후테크(CCUS) 온실가스 감축 가치
           </h4>
-          <p id="career-climate" class="text-sm font-medium text-slate-800 leading-relaxed">
-            공기나 배기가스에서 포집한 CO₂ 1톤당 약 0.7~1.2톤의 탄소를 화학적으로 고정하여 영구히 제품화합니다.
+          <p id="career-climate" class="text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">
+            <!-- Climate text -->
           </p>
-        </div>
-
-        <!-- High School / College Pathway & Future Job -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="bg-slate-100/80 p-3.5 rounded-2xl border border-slate-200">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-              <i data-lucide="graduation-cap" class="w-4 h-4 text-emerald-600"></i>
-              추천 학과 & 전공
-            </span>
-            <p id="career-majors" class="text-sm font-bold text-slate-900">
-              고분자공학과, 화학공학과, 환경공학
-            </p>
-          </div>
-          <div class="bg-slate-100/80 p-3.5 rounded-2xl border border-slate-200">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-              <i data-lucide="briefcase" class="w-4 h-4 text-emerald-600"></i>
-              미래 유망 직업 (Career)
-            </span>
-            <p id="career-jobs" class="text-sm font-bold text-slate-900">
-              친환경 패키징 연구원, CCUS 플랜트 설계사
-            </p>
-          </div>
         </div>
       </div>
 
       <!-- Action Button -->
-      <div class="mt-6 pt-4 border-t border-slate-200 flex justify-end">
-        <button id="btn-next-stage" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition">
+      <div class="mt-5 pt-4 border-t border-slate-200 flex justify-end">
+        <button id="btn-next-stage" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition active:scale-95">
           <span>다음 분자 합성하러 가기</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
@@ -578,10 +585,127 @@
         hint: '플라스틱 제품, 합성섬유, 친환경 포장재를 만드는 석유화학 대체 기본 원료',
         req: { C: 2, H: 4, O: 0 },
         quizOptions: ['에틸렌', '에탄올', '아세트산', '프로판'],
-        application: '생분해성 바이오 플라스틱, 섬유, 친환경 포장재 등 석유계 플라스틱 대체',
-        climate: '포집된 CO₂ 1톤을 에틸렌으로 전환 시 약 0.8톤 이상의 화석연료 유래 탄소를 감축',
-        majors: '고분자공학과, 화학공학과, 첨단소재공학',
-        jobs: '친환경 패키징 연구원, 고분자 합성 공정 엔지니어'
+        tags: '플라스틱 제품 · 섬유 · 포장재',
+        application: '생분해성 바이오 플라스틱, 합성섬유 의류, 친환경 포장재 필름 등 기존 석유화학 플라스틱을 대체하는 대표 원료입니다.',
+        climate: '포집된 CO₂ 1톤을 에틸렌으로 전환 시 약 0.8톤 이상의 화석연료 유래 온실가스를 감축하고 영구적으로 플라스틱 내에 탄소를 고정합니다.',
+        structureDesc: '2개의 탄소 원자가 단단한 이중결합(=)을 이루고 수소 4개가 평면 대칭으로 결합된 구조입니다.',
+        renderStructure: () => `
+          <svg viewBox="0 0 170 100" class="w-full h-full drop-shadow">
+            <defs>
+              <radialGradient id="c-ball" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#475569" />
+                <stop offset="45%" stop-color="#1e293b" />
+                <stop offset="100%" stop-color="#020617" />
+              </radialGradient>
+              <radialGradient id="h-ball" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="60%" stop-color="#e2e8f0" />
+                <stop offset="100%" stop-color="#94a3b8" />
+              </radialGradient>
+              <linearGradient id="stick-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#cbd5e1" />
+                <stop offset="50%" stop-color="#64748b" />
+                <stop offset="100%" stop-color="#334155" />
+              </linearGradient>
+            </defs>
+            <!-- Double bond -->
+            <line x1="68" y1="46" x2="102" y2="46" stroke="url(#stick-grad)" stroke-width="5" stroke-linecap="round" />
+            <line x1="68" y1="54" x2="102" y2="54" stroke="url(#stick-grad)" stroke-width="5" stroke-linecap="round" />
+            <!-- Single bonds to H -->
+            <line x1="68" y1="50" x2="34" y2="24" stroke="url(#stick-grad)" stroke-width="4.5" stroke-linecap="round" />
+            <line x1="68" y1="50" x2="34" y2="76" stroke="url(#stick-grad)" stroke-width="4.5" stroke-linecap="round" />
+            <line x1="102" y1="50" x2="136" y2="24" stroke="url(#stick-grad)" stroke-width="4.5" stroke-linecap="round" />
+            <line x1="102" y1="50" x2="136" y2="76" stroke="url(#stick-grad)" stroke-width="4.5" stroke-linecap="round" />
+            <!-- Carbon atoms (3D spheres) -->
+            <circle cx="68" cy="50" r="15" fill="url(#c-ball)" />
+            <circle cx="63" cy="45" r="4" fill="#ffffff" opacity="0.4" />
+            <text x="68" y="54" fill="#f8fafc" font-size="11" font-weight="900" text-anchor="middle">C</text>
+            <circle cx="102" cy="50" r="15" fill="url(#c-ball)" />
+            <circle cx="97" cy="45" r="4" fill="#ffffff" opacity="0.4" />
+            <text x="102" y="54" fill="#f8fafc" font-size="11" font-weight="900" text-anchor="middle">C</text>
+            <!-- Hydrogen atoms -->
+            <circle cx="34" cy="24" r="11" fill="url(#h-ball)" />
+            <circle cx="31" cy="21" r="3" fill="#ffffff" opacity="0.7" />
+            <text x="34" y="27" fill="#0f172a" font-size="9" font-weight="900" text-anchor="middle">H</text>
+            <circle cx="34" cy="76" r="11" fill="url(#h-ball)" />
+            <circle cx="31" cy="73" r="3" fill="#ffffff" opacity="0.7" />
+            <text x="34" y="79" fill="#0f172a" font-size="9" font-weight="900" text-anchor="middle">H</text>
+            <circle cx="136" cy="24" r="11" fill="url(#h-ball)" />
+            <circle cx="133" cy="21" r="3" fill="#ffffff" opacity="0.7" />
+            <text x="136" y="27" fill="#0f172a" font-size="9" font-weight="900" text-anchor="middle">H</text>
+            <circle cx="136" cy="76" r="11" fill="url(#h-ball)" />
+            <circle cx="133" cy="73" r="3" fill="#ffffff" opacity="0.7" />
+            <text x="136" y="79" fill="#0f172a" font-size="9" font-weight="900" text-anchor="middle">H</text>
+          </svg>
+        `,
+        // 실생활 활용 제품 (포장용 비닐/원단 롤, 옷걸이에 걸린 파란 티셔츠, 주황/청록 보틀 및 캡슐)
+        renderProduct: () => `
+          <svg viewBox="0 0 170 110" class="w-full h-full">
+            <defs>
+              <linearGradient id="rollGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="35%" stop-color="#e0f2fe" />
+                <stop offset="100%" stop-color="#7dd3fc" />
+              </linearGradient>
+              <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="60%" stop-color="#0284c7" />
+                <stop offset="100%" stop-color="#0369a1" />
+              </linearGradient>
+              <linearGradient id="orangeBottle" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#fb923c" />
+                <stop offset="40%" stop-color="#ea580c" />
+                <stop offset="100%" stop-color="#9a3412" />
+              </linearGradient>
+              <linearGradient id="tealBottle" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#2dd4bf" />
+                <stop offset="40%" stop-color="#0d9488" />
+                <stop offset="100%" stop-color="#115e59" />
+              </linearGradient>
+              <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="1" dy="3" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.18" />
+              </filter>
+            </defs>
+            <!-- 1. Film / Fabric Roll (White & Light Blue) -->
+            <g filter="url(#softGlow)">
+              <ellipse cx="26" cy="30" rx="9" ry="16" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.8" />
+              <ellipse cx="26" cy="30" rx="4.5" ry="8" fill="#38bdf8" opacity="0.7" />
+              <path d="M 26 14 L 62 46 C 63 50 60 78 58 78 L 26 46 Z" fill="url(#rollGrad)" stroke="#60a5fa" stroke-width="1.6" />
+              <ellipse cx="44" cy="20" rx="8" ry="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.8" />
+              <path d="M 44 6 L 78 38 L 72 70 L 44 34 Z" fill="url(#rollGrad)" stroke="#60a5fa" stroke-width="1.5" opacity="0.9" />
+            </g>
+            <!-- 2. Hanger & Blue T-Shirt -->
+            <g filter="url(#softGlow)">
+              <!-- Metal Hanger hook -->
+              <path d="M 120 18 C 120 12 126 11 126 16 C 126 21 120 23 120 26" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" />
+              <!-- T-Shirt Body -->
+              <path d="M 106 28 L 94 36 L 98 48 L 105 44 L 105 84 C 105 86 135 86 135 84 L 135 44 L 142 48 L 146 36 L 134 28 C 128 32 112 32 106 28 Z" fill="url(#shirtGrad)" stroke="#0369a1" stroke-width="1.8" />
+              <!-- Collar line -->
+              <path d="M 112 28 Q 120 35 128 28" fill="none" stroke="#e0f2fe" stroke-width="2" />
+              <line x1="120" y1="36" x2="120" y2="78" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.6" />
+            </g>
+            <!-- 3. Plastic Bottles & Caps -->
+            <g filter="url(#softGlow)">
+              <!-- Orange Bottle -->
+              <rect x="74" y="44" width="18" height="42" rx="5" fill="url(#orangeBottle)" stroke="#c2410c" stroke-width="1.6" />
+              <rect x="78" y="37" width="10" height="7" rx="2" fill="#fed7aa" stroke="#ea580c" stroke-width="1.2" />
+              <rect x="77" y="48" width="3" height="34" rx="1.5" fill="#ffedd5" opacity="0.45" />
+              <!-- Teal Bottle -->
+              <rect x="94" y="52" width="15" height="34" rx="4" fill="url(#tealBottle)" stroke="#0f766e" stroke-width="1.6" />
+              <rect x="98" y="46" width="7" height="6" rx="1.5" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.2" />
+              <rect x="96" y="55" width="2.5" height="27" rx="1" fill="#f0fdfa" opacity="0.5" />
+              <!-- Medical capsule pills in front -->
+              <g transform="translate(68, 86)">
+                <rect x="0" y="0" width="14" height="6" rx="3" fill="#ef4444" />
+                <rect x="7" y="0" width="7" height="6" rx="3" fill="#f8fafc" />
+              </g>
+              <g transform="translate(84, 88)">
+                <rect x="0" y="0" width="14" height="6" rx="3" fill="#f59e0b" />
+                <rect x="7" y="0" width="7" height="6" rx="3" fill="#38bdf8" />
+              </g>
+            </g>
+          </svg>
+        `
       },
       {
         id: 'ethanol',
@@ -590,10 +714,104 @@
         hint: '친환경 바이오 e-연료, 손소독제, 위생용품 및 화장품의 핵심 원료',
         req: { C: 2, H: 6, O: 1 },
         quizOptions: ['메탄올', '에탄올', '부탄올', '벤젠'],
-        application: 'e-바이오연료, 소독제, 제약 바이오, 청정 세정제 및 화장품 원료',
-        climate: '재생에너지 전력을 이용한 전기화학적 포집 CO₂ 전환으로 탄소중립 순환 사이클 구현',
-        majors: '생명화학공학과, 바이오시스템공학, 청정에너지학과',
-        jobs: '바이오에너지 연구원, 청정연료 공정 개발자'
+        tags: '연료 · 위생용품 · 화장품',
+        application: '친환경 수송용 e-바이오연료, 의료용 손소독제 및 소독용품, 저자극 청정 화장품의 에센셜 기제 원료로 폭넓게 쓰입니다.',
+        climate: '재생에너지 전력과 포집 CO₂를 결합하여 화석연료 채굴 없이 완전한 탄소 순환형 친환경 연료 사이클을 구축합니다.',
+        structureDesc: '에틸기(C₂H₅) 끝에 하이드록시기(-OH, 붉은 산소와 수소)가 결합된 알코올 구조입니다.',
+        renderStructure: () => `
+          <svg viewBox="0 0 170 100" class="w-full h-full drop-shadow">
+            <defs>
+              <radialGradient id="c-ball2" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#475569" /><stop offset="50%" stop-color="#1e293b" /><stop offset="100%" stop-color="#020617" />
+              </radialGradient>
+              <radialGradient id="o-ball" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#f87171" /><stop offset="50%" stop-color="#dc2626" /><stop offset="100%" stop-color="#7f1d1d" />
+              </radialGradient>
+              <radialGradient id="h-ball2" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#ffffff" /><stop offset="60%" stop-color="#e2e8f0" /><stop offset="100%" stop-color="#94a3b8" />
+              </radialGradient>
+              <linearGradient id="stick2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#cbd5e1" /><stop offset="100%" stop-color="#475569" />
+              </linearGradient>
+            </defs>
+            <!-- Bonds -->
+            <line x1="50" y1="52" x2="88" y2="52" stroke="url(#stick2)" stroke-width="4.5" stroke-linecap="round" />
+            <line x1="88" y1="52" x2="124" y2="40" stroke="url(#stick2)" stroke-width="4.5" stroke-linecap="round" />
+            <line x1="124" y1="40" x2="148" y2="64" stroke="url(#stick2)" stroke-width="4" stroke-linecap="round" />
+            <line x1="50" y1="52" x2="24" y2="52" stroke="url(#stick2)" stroke-width="4" stroke-linecap="round" />
+            <line x1="50" y1="52" x2="50" y2="24" stroke="url(#stick2)" stroke-width="4" stroke-linecap="round" />
+            <line x1="50" y1="52" x2="50" y2="80" stroke="url(#stick2)" stroke-width="4" stroke-linecap="round" />
+            <line x1="88" y1="52" x2="88" y2="24" stroke="url(#stick2)" stroke-width="4" stroke-linecap="round" />
+            <line x1="88" y1="52" x2="88" y2="80" stroke="url(#stick2)" stroke-width="4" stroke-linecap="round" />
+            <!-- Atoms -->
+            <circle cx="50" cy="52" r="14" fill="url(#c-ball2)" /><text x="50" y="56" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">C</text>
+            <circle cx="88" cy="52" r="14" fill="url(#c-ball2)" /><text x="88" y="56" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">C</text>
+            <circle cx="124" cy="40" r="13" fill="url(#o-ball)" /><text x="124" y="44" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">O</text>
+            <!-- H -->
+            <circle cx="24" cy="52" r="9" fill="url(#h-ball2)" /><text x="24" y="55" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="50" cy="24" r="9" fill="url(#h-ball2)" /><text x="50" y="27" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="50" cy="80" r="9" fill="url(#h-ball2)" /><text x="50" y="83" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="88" cy="24" r="9" fill="url(#h-ball2)" /><text x="88" y="27" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="88" cy="80" r="9" fill="url(#h-ball2)" /><text x="88" y="83" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="148" cy="64" r="9" fill="url(#h-ball2)" /><text x="148" y="67" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+          </svg>
+        `,
+        // 실생활 활용 제품 (초록색 바이오 주유기, 펌프형 손소독제 디스펜서, 골드/핑크 화장품 보틀 세트)
+        renderProduct: () => `
+          <svg viewBox="0 0 170 110" class="w-full h-full">
+            <defs>
+              <linearGradient id="pumpGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#16a34a" />
+                <stop offset="50%" stop-color="#15803d" />
+                <stop offset="100%" stop-color="#14532d" />
+              </linearGradient>
+              <linearGradient id="sanitizerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#bae6fd" />
+                <stop offset="40%" stop-color="#38bdf8" />
+                <stop offset="100%" stop-color="#0284c7" />
+              </linearGradient>
+              <linearGradient id="cosmeticGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#fef08a" />
+                <stop offset="50%" stop-color="#eab308" />
+                <stop offset="100%" stop-color="#ca8a04" />
+              </linearGradient>
+              <filter id="pShadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="1" dy="3" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.18" />
+              </filter>
+            </defs>
+            <!-- 1. Biofuel Dispenser Gas Pump -->
+            <g filter="url(#pShadow)">
+              <rect x="14" y="24" width="34" height="66" rx="6" fill="url(#pumpGrad)" stroke="#14532d" stroke-width="1.8" />
+              <rect x="18" y="30" width="26" height="20" rx="3" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.2" />
+              <!-- Eco Leaf logo inside display -->
+              <path d="M 28 42 C 28 35 36 34 38 42 C 34 44 30 44 28 42 Z" fill="#16a34a" />
+              <!-- Hose & nozzle -->
+              <path d="M 46 44 C 54 44 54 74 46 76" fill="none" stroke="#334155" stroke-width="2.6" stroke-linecap="round" />
+              <rect x="44" y="70" width="5" height="12" rx="1.5" fill="#facc15" />
+            </g>
+            <!-- 2. Sanitizer Pump Bottle with Medical Cross -->
+            <g filter="url(#pShadow)">
+              <rect x="66" y="38" width="30" height="46" rx="6" fill="url(#sanitizerGrad)" stroke="#0284c7" stroke-width="1.6" />
+              <!-- White Medical Cross -->
+              <path d="M 77 56 L 85 56 M 81 52 L 81 60" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+              <!-- Dispenser Neck & Pump head -->
+              <rect x="76" y="30" width="10" height="8" rx="2" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1" />
+              <path d="M 81 30 L 81 20 L 92 20" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round" />
+              <rect x="68" y="42" width="4" height="38" rx="2" fill="#ffffff" opacity="0.45" />
+            </g>
+            <!-- 3. Cosmetics Set (Lotion Bottle & Cream Jar) -->
+            <g filter="url(#pShadow)">
+              <!-- Tall Gold Lotion Bottle -->
+              <rect x="108" y="30" width="20" height="54" rx="4" fill="url(#cosmeticGrad)" stroke="#b45309" stroke-width="1.6" />
+              <rect x="113" y="22" width="10" height="8" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" />
+              <rect x="110" y="34" width="3" height="46" rx="1.5" fill="#ffffff" opacity="0.5" />
+              <!-- Pink Cream Jar -->
+              <rect x="132" y="56" width="26" height="28" rx="5" fill="#f472b6" stroke="#db2777" stroke-width="1.6" />
+              <rect x="130" y="50" width="30" height="8" rx="3" fill="#fbcfe8" stroke="#f43f5e" stroke-width="1.2" />
+              <rect x="135" y="62" width="20" height="4" rx="2" fill="#ffffff" opacity="0.4" />
+            </g>
+          </svg>
+        `
       },
       {
         id: 'methanol',
@@ -602,10 +820,87 @@
         hint: '탄소중립 친환경 선박 연료(e-메탄올) 및 화학제품 기본 용매',
         req: { C: 1, H: 4, O: 1 },
         quizOptions: ['포름산', '포름알데히드', '메탄올', '글리세롤'],
-        application: '글로벌 해운 탄소중립 선박 연료, 친환경 용매, 화학 중간체 원료',
-        climate: '대형 선박의 중유 대체 연료로 활용되어 해운 수송 분야 탄소 배출 95% 저감',
-        majors: '에너지화학공학, 신재생에너지 플랜트공학, 환경시스템공학',
-        jobs: '선박 청정연료 시스템 엔지니어, 탄소자원화 연구원'
+        tags: '연료 · 용매 · 화학제품',
+        application: '글로벌 대형 컨테이너선의 무탄소 추진 연료(e-메탄올), 정밀화학 공정 용매 및 기초 유기화합물 합성의 필수 중간체입니다.',
+        climate: '해운 물류의 중유 벙커씨유를 대체하여 국제 해상 운송 분야의 온실가스 배출을 최대 95%까지 감축합니다.',
+        structureDesc: '1개의 중심 탄소에 수소 3개가 결합하고, 산소(O)를 통해 1개의 수소가 이어진 가장 단순한 알코올 분자입니다.',
+        renderStructure: () => `
+          <svg viewBox="0 0 170 100" class="w-full h-full drop-shadow">
+            <defs>
+              <radialGradient id="c-ball3" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#475569" /><stop offset="50%" stop-color="#1e293b" /><stop offset="100%" stop-color="#020617" />
+              </radialGradient>
+              <radialGradient id="o-ball3" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#f87171" /><stop offset="50%" stop-color="#dc2626" /><stop offset="100%" stop-color="#7f1d1d" />
+              </radialGradient>
+              <radialGradient id="h-ball3" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#ffffff" /><stop offset="60%" stop-color="#e2e8f0" /><stop offset="100%" stop-color="#94a3b8" />
+              </radialGradient>
+            </defs>
+            <line x1="70" y1="50" x2="114" y2="42" stroke="#64748b" stroke-width="4.5" stroke-linecap="round" />
+            <line x1="114" y1="42" x2="144" y2="64" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <line x1="70" y1="50" x2="38" y2="50" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <line x1="70" y1="50" x2="70" y2="20" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <line x1="70" y1="50" x2="70" y2="80" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <circle cx="70" cy="50" r="15" fill="url(#c-ball3)" /><text x="70" y="54" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">C</text>
+            <circle cx="114" cy="42" r="13" fill="url(#o-ball3)" /><text x="114" y="46" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">O</text>
+            <circle cx="38" cy="50" r="9" fill="url(#h-ball3)" /><text x="38" y="53" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="70" cy="20" r="9" fill="url(#h-ball3)" /><text x="70" y="23" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="70" cy="80" r="9" fill="url(#h-ball3)" /><text x="70" y="83" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="144" cy="64" r="9" fill="url(#h-ball3)" /><text x="144" y="67" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+          </svg>
+        `,
+        // 실생활 활용 제품 (녹색 제리캔 에코연료통, 화학 삼각 플라스크, 파란색 원형 화학 원료통 세트)
+        renderProduct: () => `
+          <svg viewBox="0 0 170 110" class="w-full h-full">
+            <defs>
+              <linearGradient id="canGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#22c55e" /><stop offset="50%" stop-color="#16a34a" /><stop offset="100%" stop-color="#14532d" />
+              </linearGradient>
+              <linearGradient id="flaskLiquid" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#4ade80" /><stop offset="100%" stop-color="#15803d" />
+              </linearGradient>
+              <linearGradient id="barrelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#38bdf8" /><stop offset="50%" stop-color="#0284c7" /><stop offset="100%" stop-color="#0369a1" />
+              </linearGradient>
+            </defs>
+            <!-- 1. Green Jerrycan Eco-Fuel Container -->
+            <g>
+              <rect x="16" y="26" width="38" height="56" rx="6" fill="url(#canGrad)" stroke="#14532d" stroke-width="1.8" />
+              <!-- Handle -->
+              <path d="M 22 26 L 22 18 L 42 18 L 42 26" fill="none" stroke="#166534" stroke-width="3" stroke-linecap="round" />
+              <!-- Cap -->
+              <rect x="42" y="16" width="9" height="10" rx="2" fill="#facc15" stroke="#ca8a04" stroke-width="1" />
+              <!-- Eco Leaf Emblem -->
+              <circle cx="35" cy="54" r="10" fill="#dcfce7" />
+              <path d="M 31 56 C 31 49 39 48 40 56 C 36 58 33 58 31 56 Z" fill="#15803d" />
+              <rect x="20" y="32" width="3" height="44" rx="1.5" fill="#ffffff" opacity="0.4" />
+            </g>
+            <!-- 2. Chemical Erlenmeyer Flask with Glowing Green Liquid -->
+            <g>
+              <!-- Glass Flask Body -->
+              <path d="M 76 22 L 86 22 L 86 34 L 106 72 C 107 76 104 80 98 80 L 64 80 C 58 80 55 76 56 72 L 76 34 Z" fill="rgba(240, 249, 255, 0.6)" stroke="#0284c7" stroke-width="1.8" />
+              <!-- Liquid inside -->
+              <path d="M 59 66 L 64 80 L 98 80 L 103 66 Q 81 63 59 66 Z" fill="url(#flaskLiquid)" opacity="0.9" />
+              <!-- Bubbles -->
+              <circle cx="76" cy="72" r="2.5" fill="#ffffff" opacity="0.8" />
+              <circle cx="86" cy="68" r="1.8" fill="#ffffff" opacity="0.8" />
+              <!-- Measurement lines -->
+              <line x1="84" y1="46" x2="90" y2="46" stroke="#0284c7" stroke-width="1.2" />
+              <line x1="86" y1="54" x2="94" y2="54" stroke="#0284c7" stroke-width="1.2" />
+            </g>
+            <!-- 3. Blue Chemical Barrels & Solvent Tubs -->
+            <g>
+              <!-- Large Blue Solvent Tub -->
+              <rect x="114" y="44" width="38" height="38" rx="6" fill="url(#barrelGrad)" stroke="#075985" stroke-width="1.8" />
+              <rect x="112" y="38" width="42" height="7" rx="3" fill="#bae6fd" stroke="#0284c7" stroke-width="1.2" />
+              <!-- Small front container -->
+              <rect x="134" y="58" width="22" height="24" rx="4" fill="#0284c7" stroke="#0369a1" stroke-width="1.4" />
+              <rect x="132" y="54" width="26" height="5" rx="2" fill="#7dd3fc" stroke="#0284c7" stroke-width="1" />
+              <rect x="118" y="48" width="3" height="30" rx="1.5" fill="#ffffff" opacity="0.4" />
+            </g>
+          </svg>
+        `
       },
       {
         id: 'butanol',
@@ -614,10 +909,86 @@
         hint: '차세대 지속가능 항공유(SAF) 및 고급 친환경 도료 원료',
         req: { C: 4, H: 10, O: 1 },
         quizOptions: ['부탄올', '아세톤', '에테르', '프로필렌'],
-        application: '지속가능 항공유(SAF), 자동차 친환경 도료, 정밀 화학제품 용매',
-        climate: '항공 운송 부문 탈탄소화의 열쇠로서 기존 항공유 대비 라이프사이클 탄소 70% 이상 감축',
-        majors: '항공우주공학, 정밀화학과, 환경에너지공학과',
-        jobs: '지속가능 항공유(SAF) 합성 연구원, 정밀화학 공정 기술자'
+        tags: '연료 · 용매 · 화학제품',
+        application: '탄소 배출을 획기적으로 낮추는 차세대 지속가능 항공유(SAF), 프리미엄 친환경 자동차 도료, 특수 수지 용매의 핵심 원료입니다.',
+        climate: '항공 운송 부문의 넷제로(Net-Zero)를 실현하는 대체 연료로, 화석 항공유 대비 생애주기 탄소 배출을 70% 이상 저감합니다.',
+        structureDesc: '탄소 4개가 긴 사슬(C-C-C-C)을 이루고 산소와 결합하여 높은 에너지 밀도를 가진 고급 알코올 구조입니다.',
+        renderStructure: () => `
+          <svg viewBox="0 0 170 100" class="w-full h-full drop-shadow">
+            <defs>
+              <radialGradient id="c-b4" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#475569" /><stop offset="100%" stop-color="#020617" /></radialGradient>
+              <radialGradient id="o-b4" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#f87171" /><stop offset="100%" stop-color="#7f1d1d" /></radialGradient>
+              <radialGradient id="h-b4" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#ffffff" /><stop offset="100%" stop-color="#94a3b8" /></radialGradient>
+            </defs>
+            <line x1="26" y1="50" x2="56" y2="50" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <line x1="56" y1="50" x2="86" y2="50" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <line x1="86" y1="50" x2="116" y2="50" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <line x1="116" y1="50" x2="140" y2="40" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <!-- Carbons -->
+            <circle cx="26" cy="50" r="11" fill="url(#c-b4)" /><text x="26" y="54" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">C</text>
+            <circle cx="56" cy="50" r="11" fill="url(#c-b4)" /><text x="56" y="54" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">C</text>
+            <circle cx="86" cy="50" r="11" fill="url(#c-b4)" /><text x="86" y="54" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">C</text>
+            <circle cx="116" cy="50" r="11" fill="url(#c-b4)" /><text x="116" y="54" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">C</text>
+            <circle cx="140" cy="40" r="10" fill="url(#o-b4)" /><text x="140" y="44" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">O</text>
+            <!-- Vertical H -->
+            <line x1="26" y1="50" x2="26" y2="26" stroke="#64748b" stroke-width="3" /><circle cx="26" cy="26" r="6.5" fill="url(#h-b4)" />
+            <line x1="26" y1="50" x2="26" y2="74" stroke="#64748b" stroke-width="3" /><circle cx="26" cy="74" r="6.5" fill="url(#h-b4)" />
+            <line x1="56" y1="50" x2="56" y2="26" stroke="#64748b" stroke-width="3" /><circle cx="56" cy="26" r="6.5" fill="url(#h-b4)" />
+            <line x1="56" y1="50" x2="56" y2="74" stroke="#64748b" stroke-width="3" /><circle cx="56" cy="74" r="6.5" fill="url(#h-b4)" />
+            <line x1="86" y1="50" x2="86" y2="26" stroke="#64748b" stroke-width="3" /><circle cx="86" cy="26" r="6.5" fill="url(#h-b4)" />
+            <line x1="86" y1="50" x2="86" y2="74" stroke="#64748b" stroke-width="3" /><circle cx="86" cy="74" r="6.5" fill="url(#h-b4)" />
+            <line x1="116" y1="50" x2="116" y2="26" stroke="#64748b" stroke-width="3" /><circle cx="116" cy="26" r="6.5" fill="url(#h-b4)" />
+            <line x1="116" y1="50" x2="116" y2="74" stroke="#64748b" stroke-width="3" /><circle cx="116" cy="74" r="6.5" fill="url(#h-b4)" />
+            <line x1="26" y1="50" x2="10" y2="50" stroke="#64748b" stroke-width="3" /><circle cx="10" cy="50" r="6.5" fill="url(#h-b4)" />
+            <line x1="140" y1="40" x2="156" y2="52" stroke="#64748b" stroke-width="3" /><circle cx="156" cy="52" r="6.5" fill="url(#h-b4)" />
+          </svg>
+        `,
+        // 실생활 활용 제품 (푸른색 세련된 자동차, 페인트 버킷과 붓, 핑크/골드 화장품 보틀)
+        renderProduct: () => `
+          <svg viewBox="0 0 170 110" class="w-full h-full">
+            <defs>
+              <linearGradient id="carGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" /><stop offset="50%" stop-color="#0284c7" /><stop offset="100%" stop-color="#075985" />
+              </linearGradient>
+              <linearGradient id="bucketGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#e2e8f0" /><stop offset="50%" stop-color="#cbd5e1" /><stop offset="100%" stop-color="#94a3b8" />
+              </linearGradient>
+            </defs>
+            <!-- 1. Sleek Blue Automobile (Coatings & SAF Eco fuel) -->
+            <g>
+              <path d="M 94 30 L 106 18 C 112 16 138 16 148 20 L 160 30 L 166 34 C 168 38 166 48 164 50 L 92 50 C 90 44 91 33 94 30 Z" fill="url(#carGrad)" stroke="#0369a1" stroke-width="1.8" />
+              <!-- Windows -->
+              <path d="M 110 20 L 126 20 L 126 28 L 102 28 Z" fill="#e0f2fe" opacity="0.9" />
+              <path d="M 130 20 L 144 22 L 152 28 L 130 28 Z" fill="#e0f2fe" opacity="0.9" />
+              <!-- Headlights -->
+              <polygon points="160,32 166,33 164,37 158,35" fill="#fef08a" />
+              <!-- Wheels -->
+              <circle cx="106" cy="50" r="8" fill="#1e293b" stroke="#0f172a" stroke-width="1.5" />
+              <circle cx="106" cy="50" r="3.5" fill="#94a3b8" />
+              <circle cx="150" cy="50" r="8" fill="#1e293b" stroke="#0f172a" stroke-width="1.5" />
+              <circle cx="150" cy="50" r="3.5" fill="#94a3b8" />
+            </g>
+            <!-- 2. Paint Bucket & Paint Brush with dripping paint -->
+            <g>
+              <!-- Bucket -->
+              <path d="M 18 46 L 52 46 L 48 84 L 22 84 Z" fill="url(#bucketGrad)" stroke="#64748b" stroke-width="1.8" />
+              <ellipse cx="35" cy="46" rx="17" ry="5" fill="#0284c7" stroke="#0369a1" stroke-width="1.2" />
+              <!-- Wire handle -->
+              <path d="M 17 48 Q 35 28 53 48" fill="none" stroke="#64748b" stroke-width="2" />
+              <!-- Brush dipped into paint -->
+              <line x1="56" y1="30" x2="36" y2="64" stroke="#d97706" stroke-width="5" stroke-linecap="round" />
+              <rect x="36" y="58" width="10" height="6" rx="1" transform="rotate(-40 36 58)" fill="#f59e0b" />
+              <path d="M 32 64 C 28 72 38 74 34 80" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round" />
+            </g>
+            <!-- 3. Cosmetics Sprayer Bottles -->
+            <g>
+              <rect x="144" y="56" width="16" height="34" rx="4" fill="#f43f5e" stroke="#be123c" stroke-width="1.5" />
+              <rect x="148" y="48" width="8" height="8" rx="2" fill="#fda4af" />
+              <rect x="124" y="66" width="16" height="24" rx="3" fill="#fbcfe8" stroke="#db2777" stroke-width="1.4" />
+              <circle cx="132" cy="62" r="3" fill="#f472b6" />
+            </g>
+          </svg>
+        `
       },
       {
         id: 'formic_acid',
@@ -626,22 +997,162 @@
         hint: '친환경 보존제, 사료첨가제, 가죽·섬유 가공 및 차세대 연료전지 전해액',
         req: { C: 1, H: 2, O: 2 },
         quizOptions: ['구연산', '개미산', '옥살산', '아세트산'],
-        application: '무독성 사료 첨가 보존제, 섬유/가죽 가공제, 액체 수소 저장체 및 연료전지',
-        climate: 'CO₂ 전기환원 반응을 통해 가장 높은 에너지 효율로 직접 전환되는 고부가가치 유기산',
-        majors: '녹색화학과, 환경공학과, 신에너지시스템공학',
-        jobs: '연료전지 전해질 연구원, 친환경 소재 평가원'
+        tags: '보존 · 가공 · 화학 원료',
+        application: '무독성 가축 사료 방부·보존제, 가죽 유연화 및 고급 섬유 염색 가공제, 미래 액체 수소 저장 및 연료전지 전해액으로 활용됩니다.',
+        climate: 'CO₂의 직접 전기화학적 환원 반응을 통해 가장 높은 에너지 효율로 합성되는 대표적인 고부가가치 유기산입니다.',
+        structureDesc: '탄소에 카르보닐 산소(=O)와 수산화기(-OH)가 모두 결합한 가장 기본적인 카복실산 구조입니다.',
+        renderStructure: () => `
+          <svg viewBox="0 0 170 100" class="w-full h-full drop-shadow">
+            <defs>
+              <radialGradient id="c-fa" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#475569" /><stop offset="100%" stop-color="#020617" /></radialGradient>
+              <radialGradient id="o-fa" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#f87171" /><stop offset="100%" stop-color="#7f1d1d" /></radialGradient>
+              <radialGradient id="h-fa" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#ffffff" /><stop offset="100%" stop-color="#94a3b8" /></radialGradient>
+            </defs>
+            <!-- Double bond to O -->
+            <line x1="77" y1="52" x2="77" y2="24" stroke="#64748b" stroke-width="4.5" stroke-linecap="round" />
+            <line x1="83" y1="52" x2="83" y2="24" stroke="#64748b" stroke-width="4.5" stroke-linecap="round" />
+            <!-- Single to O -->
+            <line x1="80" y1="52" x2="120" y2="52" stroke="#64748b" stroke-width="4.5" stroke-linecap="round" />
+            <line x1="120" y1="52" x2="146" y2="72" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <!-- Single to H -->
+            <line x1="80" y1="52" x2="46" y2="52" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+            <!-- Atoms -->
+            <circle cx="80" cy="52" r="15" fill="url(#c-fa)" /><text x="80" y="56" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">C</text>
+            <circle cx="80" cy="24" r="13" fill="url(#o-fa)" /><text x="80" y="28" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">O</text>
+            <circle cx="120" cy="52" r="13" fill="url(#o-fa)" /><text x="120" y="56" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">O</text>
+            <circle cx="46" cy="52" r="9" fill="url(#h-fa)" /><text x="46" y="55" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+            <circle cx="146" cy="72" r="9" fill="url(#h-fa)" /><text x="146" y="75" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle">H</text>
+          </svg>
+        `,
+        // 실생활 활용 제품 (녹색 자연 잎사귀, 보존제 시약병, 흰색 사료/보존 분말 그릇, 가죽 피혁 & 섬유 롤 스택)
+        renderProduct: () => `
+          <svg viewBox="0 0 170 110" class="w-full h-full">
+            <defs>
+              <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4ade80" /><stop offset="50%" stop-color="#22c55e" /><stop offset="100%" stop-color="#15803d" />
+              </linearGradient>
+              <linearGradient id="leatherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f59e0b" /><stop offset="60%" stop-color="#d97706" /><stop offset="100%" stop-color="#92400e" />
+              </linearGradient>
+            </defs>
+            <!-- 1. Vibrant Green Leaves (Eco Preservative / Agriculture) -->
+            <g>
+              <path d="M 22 72 C 10 44 26 22 42 28 C 46 48 34 72 22 72 Z" fill="url(#leafGrad)" stroke="#16a34a" stroke-width="1.8" />
+              <path d="M 26 64 Q 34 44 40 32" stroke="#14532d" stroke-width="1.6" fill="none" />
+              <path d="M 32 48 Q 38 46 42 42" stroke="#14532d" stroke-width="1.2" fill="none" />
+              <!-- Small second leaf -->
+              <path d="M 12 58 C 4 40 14 26 26 30 C 28 44 20 60 12 58 Z" fill="#86efac" stroke="#16a34a" stroke-width="1.4" opacity="0.85" />
+            </g>
+            <!-- 2. Blue Preservative/Feed Bottle with Medical Cross -->
+            <g>
+              <rect x="52" y="34" width="28" height="44" rx="6" fill="#0284c7" stroke="#0369a1" stroke-width="1.6" />
+              <rect x="58" y="26" width="16" height="8" rx="2" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" />
+              <!-- White Cross -->
+              <path d="M 61 56 L 71 56 M 66 51 L 66 61" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" />
+            </g>
+            <!-- 3. Powder Bowl in front -->
+            <g>
+              <path d="M 72 74 C 72 88 106 88 106 74 Z" fill="#94a3b8" stroke="#475569" stroke-width="1.5" />
+              <ellipse cx="89" cy="74" rx="17" ry="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+              <!-- Mound of white organic salt / preservative powder -->
+              <ellipse cx="89" cy="72" rx="13" ry="5" fill="#ffffff" />
+            </g>
+            <!-- 4. Leather Hide & Folded Textiles -->
+            <g>
+              <!-- Leather skin contour -->
+              <path d="M 112 28 Q 132 18 144 30 Q 128 46 112 28" fill="url(#leatherGrad)" stroke="#b45309" stroke-width="1.8" />
+              <!-- Stacked fabric rolls -->
+              <rect x="110" y="48" width="46" height="12" rx="4" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.6" />
+              <ellipse cx="156" cy="54" rx="4" ry="6" fill="#bfdbfe" />
+              <rect x="106" y="64" width="50" height="13" rx="4" fill="#cbd5e1" stroke="#64748b" stroke-width="1.6" />
+              <ellipse cx="156" cy="70.5" rx="4" ry="6.5" fill="#e2e8f0" />
+            </g>
+          </svg>
+        `
       },
       {
         id: 'graphene',
         name: '그래핀',
         formula: 'C (동소체)',
         hint: '차세대 2차전지 배터리, 초경량 반도체 및 플렉서블 스마트기기 신소재',
-        req: { C: 6, H: 0, O: 0 }, // 6-ring hexagonal demonstration
+        req: { C: 6, H: 0, O: 0 },
         quizOptions: ['흑연', '다이아몬드', '그래핀', '풀러렌'],
-        application: '초고속 충전 배터리 음극재, 방열 스마트폰 부품, 차세대 반도체 나노소재',
-        climate: '온실가스인 CO₂와 메탄을 고순도 고체 탄소(그래핀)로 영구 격리하여 대기 방출 완전 차단',
-        majors: '신소재공학과, 나노융합공학과, 반도체소재물리학과',
-        jobs: '나노신소재 연구원, 차세대 배터리 설계 연구원'
+        tags: '에너지 저장 · 전자소재 · 스마트 기기',
+        application: '초고속 충전 2차전지 배터리 음극재, 방열 스마트폰 기판, 차세대 초소형 초고속 반도체 및 휘어지는(플렉서블) 디스플레이의 꿈의 나노소재입니다.',
+        climate: '배출된 온실가스(CO₂, CH₄)를 분해하여 영구히 분해되지 않는 고순도 고체 탄소 신소재로 대기 방출을 완전히 영구 차단합니다.',
+        structureDesc: '탄소 원자들이 벌집 모양의 평면 2차원 정육각형 격자 네트워크를 형성한 나노 탄소 동소체입니다.',
+        renderStructure: () => `
+          <svg viewBox="0 0 170 100" class="w-full h-full drop-shadow">
+            <defs>
+              <radialGradient id="c-grap" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#34d399" /><stop offset="50%" stop-color="#0f172a" /><stop offset="100%" stop-color="#020617" /></radialGradient>
+            </defs>
+            <!-- Hexagonal bonds -->
+            <polygon points="85,20 120,38 120,74 85,92 50,74 50,38" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="4" stroke-linejoin="round" />
+            <!-- Additional surrounding mesh lines for honeycomb sensation -->
+            <line x1="85" y1="20" x2="85" y2="4" stroke="#059669" stroke-width="2.5" stroke-dasharray="3 3" />
+            <line x1="120" y1="38" x2="138" y2="28" stroke="#059669" stroke-width="2.5" stroke-dasharray="3 3" />
+            <line x1="120" y1="74" x2="138" y2="84" stroke="#059669" stroke-width="2.5" stroke-dasharray="3 3" />
+            <line x1="85" y1="92" x2="85" y2="98" stroke="#059669" stroke-width="2.5" stroke-dasharray="3 3" />
+            <line x1="50" y1="74" x2="32" y2="84" stroke="#059669" stroke-width="2.5" stroke-dasharray="3 3" />
+            <line x1="50" y1="38" x2="32" y2="28" stroke="#059669" stroke-width="2.5" stroke-dasharray="3 3" />
+            <!-- 6 Carbon atoms with emerald glow -->
+            <circle cx="85" cy="20" r="12" fill="url(#c-grap)" stroke="#34d399" stroke-width="2" /><text x="85" y="24" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">C</text>
+            <circle cx="120" cy="38" r="12" fill="url(#c-grap)" stroke="#34d399" stroke-width="2" /><text x="120" y="42" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">C</text>
+            <circle cx="120" cy="74" r="12" fill="url(#c-grap)" stroke="#34d399" stroke-width="2" /><text x="120" y="78" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">C</text>
+            <circle cx="85" cy="92" r="12" fill="url(#c-grap)" stroke="#34d399" stroke-width="2" /><text x="85" y="96" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">C</text>
+            <circle cx="50" cy="74" r="12" fill="url(#c-grap)" stroke="#34d399" stroke-width="2" /><text x="50" y="78" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">C</text>
+            <circle cx="50" cy="38" r="12" fill="url(#c-grap)" stroke="#34d399" stroke-width="2" /><text x="50" y="42" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">C</text>
+          </svg>
+        `,
+        // 실생활 활용 제품 (초록색 2차전지 배터리, 반도체 마이크로 프로세서 칩, 곡면 플렉서블 디스플레이)
+        renderProduct: () => `
+          <svg viewBox="0 0 170 110" class="w-full h-full">
+            <defs>
+              <linearGradient id="battGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#22c55e" /><stop offset="50%" stop-color="#16a34a" /><stop offset="100%" stop-color="#14532d" />
+              </linearGradient>
+              <linearGradient id="chipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#334155" /><stop offset="100%" stop-color="#0f172a" />
+              </linearGradient>
+              <linearGradient id="flexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" /><stop offset="50%" stop-color="#6366f1" /><stop offset="100%" stop-color="#a855f7" />
+              </linearGradient>
+            </defs>
+            <!-- 1. Next-Gen Green Battery Cell with Glowing Charge Levels -->
+            <g>
+              <rect x="14" y="26" width="34" height="64" rx="6" fill="url(#battGrad)" stroke="#14532d" stroke-width="1.8" />
+              <rect x="24" y="18" width="14" height="8" rx="2.5" fill="#cbd5e1" stroke="#64748b" stroke-width="1.2" />
+              <!-- 4 LED Charge Level Bars -->
+              <rect x="20" y="34" width="22" height="9" rx="2" fill="#86efac" />
+              <rect x="20" y="47" width="22" height="9" rx="2" fill="#86efac" />
+              <rect x="20" y="60" width="22" height="9" rx="2" fill="#86efac" />
+              <rect x="20" y="73" width="22" height="9" rx="2" fill="#86efac" />
+            </g>
+            <!-- 2. Semiconductor Microprocessor Chip with Gold Connector Pins -->
+            <g>
+              <!-- Pins Left/Right -->
+              <line x1="56" y1="36" x2="62" y2="36" stroke="#f59e0b" stroke-width="2.5" />
+              <line x1="56" y1="46" x2="62" y2="46" stroke="#f59e0b" stroke-width="2.5" />
+              <line x1="56" y1="56" x2="62" y2="56" stroke="#f59e0b" stroke-width="2.5" />
+              <line x1="56" y1="66" x2="62" y2="66" stroke="#f59e0b" stroke-width="2.5" />
+              <line x1="102" y1="36" x2="108" y2="36" stroke="#f59e0b" stroke-width="2.5" />
+              <line x1="102" y1="46" x2="108" y2="46" stroke="#f59e0b" stroke-width="2.5" />
+              <line x1="102" y1="56" x2="108" y2="56" stroke="#f59e0b" stroke-width="2.5" />
+              <line x1="102" y1="66" x2="108" y2="66" stroke="#f59e0b" stroke-width="2.5" />
+              <!-- Chip Body -->
+              <rect x="62" y="26" width="40" height="48" rx="5" fill="url(#chipGrad)" stroke="#64748b" stroke-width="1.8" />
+              <!-- Inner Silicon Core & Circuit -->
+              <rect x="70" y="35" width="24" height="24" rx="3" fill="#0284c7" opacity="0.9" />
+              <circle cx="82" cy="47" r="4" fill="#38bdf8" />
+            </g>
+            <!-- 3. Flexible Curved Smart Screen / Device -->
+            <g>
+              <path d="M 104 68 C 122 54 136 78 158 58 L 152 76 C 132 94 118 70 100 86 Z" fill="url(#flexGrad)" stroke="#4338ca" stroke-width="2" />
+              <!-- Highlight curve on display -->
+              <path d="M 108 72 C 124 58 136 80 154 62" fill="none" stroke="#ffffff" stroke-width="2.2" opacity="0.75" />
+            </g>
+          </svg>
+        `
       }
     ];
 
@@ -652,12 +1163,12 @@
     let fallingAtoms = [];
     let particles = [];
     let isModalOpen = false;
-
-    // Drag and Drop interaction state
+    /* Drag and Drop interaction state */
     let draggedAtom = null;
     let hoveredSlot = null;
     let pointerPos = { x: 0, y: 0 };
     let activePointerId = null;
+    let customInfographicUrl = null; // Store user uploaded or auto-loaded infographic image URL
 
     // Canvas references
     const canvas = document.getElementById('game-canvas');
@@ -1141,14 +1652,61 @@
 
     function openCareerModal() {
       const mol = MOLECULES[currentStageIndex];
-      document.getElementById('career-title').textContent = `${mol.name} (${mol.id.toUpperCase()})`;
-      document.getElementById('career-formula').textContent = `화학식: ${mol.formula}`;
-      document.getElementById('career-application').textContent = mol.application;
-      document.getElementById('career-climate').textContent = mol.climate;
-      document.getElementById('career-majors').textContent = mol.majors;
-      document.getElementById('career-jobs').textContent = mol.jobs;
+      const titleEl = document.getElementById('career-title');
+      if (titleEl) titleEl.textContent = `${mol.name} (${mol.id.toUpperCase()})`;
+      const formEl = document.getElementById('career-formula');
+      if (formEl) formEl.textContent = `화학식: ${mol.formula}`;
+      const appEl = document.getElementById('career-application');
+      if (appEl) appEl.textContent = mol.application;
+      const climEl = document.getElementById('career-climate');
+      if (climEl) climEl.textContent = mol.climate;
+      const structDescEl = document.getElementById('career-structure-desc');
+      if (structDescEl) structDescEl.textContent = mol.structureDesc;
+      const tagsEl = document.getElementById('product-tags');
+      if (tagsEl) tagsEl.textContent = mol.tags;
+
+      // 1. Molecular Structure Graphic Rendering
+      const molGfx = document.getElementById('molecule-graphic-container');
+      if (molGfx) {
+        if (customInfographicUrl && mol.cropStructure) {
+          molGfx.innerHTML = `
+            <div class="w-full h-full rounded-lg overflow-hidden relative shadow-inner bg-white/5 border border-slate-700/60"
+                 style="background-image: url('${customInfographicUrl}');
+                        background-size: ${mol.cropStructure.bgSize};
+                        background-position: ${mol.cropStructure.bgPos};
+                        background-repeat: no-repeat;">
+            </div>
+          `;
+        } else if (mol.renderStructure) {
+          molGfx.innerHTML = mol.renderStructure();
+        }
+      }
+
+      // 2. Realistic Product Graphic Rendering (Original Infographic Image Crop Priority)
+      const prodGfx = document.getElementById('product-graphic-container');
+      if (prodGfx) {
+        if (customInfographicUrl && mol.cropProduct) {
+          // If infographic is uploaded/connected, show exact cropped region of original image
+          prodGfx.innerHTML = `
+            <div class="w-full h-full rounded-xl overflow-hidden relative shadow-md bg-white border border-emerald-300"
+                 style="background-image: url('${customInfographicUrl}');
+                        background-size: ${mol.cropProduct.bgSize};
+                        background-position: ${mol.cropProduct.bgPos};
+                        background-repeat: no-repeat;">
+            </div>
+          `;
+        } else if (mol.renderProduct) {
+          // Render high-fidelity vector illustration
+          prodGfx.innerHTML = `
+            <div class="relative w-full h-full flex items-center justify-center">
+              ${mol.renderProduct()}
+            </div>
+          `;
+        }
+      }
 
       document.getElementById('career-modal').classList.remove('hidden');
+      lucide.createIcons();
     }
 
     function advanceToNextStage() {
@@ -1219,11 +1777,22 @@
       lucide.createIcons();
     };
 
+    // Auto-detect default local image file if present in the same directory
+    function tryAutoLoadDefaultImage() {
+      const defaultFilename = 'carbon_compounds_info.png';
+      const testImg = new Image();
+      testImg.onload = function() {
+        customInfographicUrl = defaultFilename;
+      };
+      testImg.src = defaultFilename;
+    }
+
     // Start on window load
     window.onload = function() {
       lucide.createIcons();
       resizeCanvas();
       updateHUD();
+      tryAutoLoadDefaultImage();
       requestAnimationFrame(gameLoop);
     };
   </script>
